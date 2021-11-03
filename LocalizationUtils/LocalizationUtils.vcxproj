@@ -163,6 +163,13 @@
       <Project>{91f7fb1e-1d8d-4544-99e2-23d409d666ab}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="localization_utils_settings.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Constants.h" />
+    <ClInclude Include="src\headers.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
