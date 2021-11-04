@@ -130,6 +130,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)JSON\src;$(SolutionDir)SHA256\src</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,6 +153,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)JSON\src;$(SolutionDir)SHA256\src</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -171,6 +173,8 @@
     <ClCompile Include="src\Commands\ICommand.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Runner.cpp" />
+    <ClCompile Include="src\Utility.cpp" />
+    <ClCompile Include="src\Validator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JSON\JSON.vcxproj">
@@ -189,6 +193,8 @@
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\headers.h" />
     <ClInclude Include="src\Runner.h" />
+    <ClInclude Include="src\Utility.h" />
+    <ClInclude Include="src\Validator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

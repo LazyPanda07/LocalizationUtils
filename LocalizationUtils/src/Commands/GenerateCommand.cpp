@@ -4,6 +4,57 @@ using namespace std;
 
 namespace commands
 {
+	void GenerateCommand::start(const filesystem::path& localizationFolder, const string& mainLanguage, const vector<string>& otherLanguages) const
+	{
+		json::JSONBuilder localizationSettingsBuilder(CP_UTF8);
+
+		filesystem::create_directory(localizationFolder);
+
+		utility::makeLocalizationFile(mainLanguage, localizationFolder);
+
+		for (const auto& i : otherLanguages)
+		{
+			utility::makeLocalizationFile(i, localizationFolder);
+		}
+	}
+
+	void GenerateCommand::repeat(const filesystem::path& localizationFolder, const string& mainLanguage, const vector<string>& otherLanguages) const
+	{
+		filesystem::directory_iterator it(localizationFolder);
+		unordered_map<string, string> localizationFiles;
+		json::JSONParser localizationKeys;
+
+		for (const auto& i : it)
+		{
+			string fileName = i.path().string();
+			string language = string(fileName.begin() + fileName.rfind('_') + 1, fileName.begin() + fileName.rfind('.'));
+
+			localizationFiles[move(language)] = move(fileName);
+		}
+
+		if (localizationFiles.find(mainLanguage) == localizationFiles.end())
+		{
+			localizationKeys.setJSONData((ostringstream() << ifstream(utility::makeLocalizationFile(mainLanguage, localizationFolder)).rdbuf()).str());
+		}
+		else
+		{
+			string pathToMainLanguageLocalizationFile = (filesystem::path(global::startFolder) / global::localizationSettingsFile).string();
+
+			localizationKeys.setJSONData((ostringstream() << ifstream(format(pathToMainLanguageLocalizationFile, mainLanguage)).rdbuf()).str());
+		}
+
+		if (otherLanguages.size() && (otherLanguages.size() - 1 < localizationFiles.size()))
+		{
+			for (const auto& i : otherLanguages)
+			{
+				if (localizationFiles.find(i) == localizationFiles.end())
+				{
+					utility::makeLocalizationFile(i, localizationFolder);
+				}
+			}
+		}
+	}
+
 	GenerateCommand::GenerateCommand(const json::JSONParser& settings) :
 		ICommand(settings)
 	{
@@ -12,6 +63,21 @@ namespace commands
 
 	void GenerateCommand::run() const
 	{
+		const string& mainLanguage = settings.getString(settings::mainLanguageSetting);
+		vector<string> otherLanguages = json::utility::JSONArrayWrapper(settings.getArray(settings::otherLanguagesSetting)).getAsStringArray();
+		filesystem::path localizationFolder;
 
+		localizationFolder /= global::startFolder;
+
+		localizationFolder /= settings::localizationFolderName;
+		
+		if (!filesystem::exists(localizationFolder))
+		{
+			this->start(localizationFolder, mainLanguage, otherLanguages);
+		}
+		else
+		{
+			this->repeat(localizationFolder, mainLanguage, otherLanguages);
+		}
 	}
 }

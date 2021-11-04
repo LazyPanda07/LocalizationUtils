@@ -19,6 +19,8 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
+	global::startFolder = string(argv[0], string_view(argv[0]).rfind('\\'));
+
 	if (!filesystem::exists(settings::settingsFile))
 	{
 		cout << format(R"(Can't find "{}" file)"sv, settings::settingsFile) << endl;
@@ -48,7 +50,16 @@ int main(int argc, char** argv)
 
 	Runner runner(settings);
 
-	runner.run(argv[1]);
+	try
+	{
+		runner.run(argv[1]);
+	}
+	catch (const bad_variant_access&)
+	{
+		cout << format(R"("{}" only accepts string values)"sv, settings::otherLanguagesSetting) << endl;
+
+		return -1;
+	}
 
 	return 0;
 }
