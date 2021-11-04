@@ -13,7 +13,7 @@ namespace settings
 {
 	inline constexpr std::string_view settingsFile = "localization_utils_settings.json";
 
-	inline const std::string mainLanguageSetting = "mainLanguage";
+	inline const std::string originalLanguageSetting = "originalLanguage";
 	inline const std::string otherLanguagesSetting = "otherLanguages";
 
 	inline const std::string_view intermediateFolderName = "intermediate";

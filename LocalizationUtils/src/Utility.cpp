@@ -19,4 +19,16 @@ namespace utility
 
 		return fileName;
 	}
+
+	json::JSONBuilder copyOriginalLanguage(const json::JSONParser& originalLanguageKeys)
+	{
+		json::JSONBuilder result(CP_UTF8);
+
+		for (const auto& i : originalLanguageKeys)
+		{
+			result[i->first] = ""s;
+		}
+
+		return result;
+	}
 }

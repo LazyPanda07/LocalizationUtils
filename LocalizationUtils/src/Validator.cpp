@@ -14,9 +14,9 @@ vector<string> Validator::validate() const
 
 	vector<string> errors;
 
-	if (!settings.contains(settings::mainLanguageSetting, variantTypeEnum::jString))
+	if (!settings.contains(settings::originalLanguageSetting, variantTypeEnum::jString))
 	{
-		errors.push_back(format(R"(Can't find "{}" setting in "{}")"sv, settings::mainLanguageSetting, settings::settingsFile));
+		errors.push_back(format(R"(Can't find "{}" setting in "{}")"sv, settings::originalLanguageSetting, settings::settingsFile));
 	}
 
 	if (!settings.contains(settings::otherLanguagesSetting, variantTypeEnum::jJSONArray))

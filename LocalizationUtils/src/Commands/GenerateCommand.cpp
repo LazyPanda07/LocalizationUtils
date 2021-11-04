@@ -4,13 +4,13 @@ using namespace std;
 
 namespace commands
 {
-	void GenerateCommand::start(const filesystem::path& localizationFolder, const string& mainLanguage, const vector<string>& otherLanguages) const
+	void GenerateCommand::start(const filesystem::path& localizationFolder, const string& originalLanguage, const vector<string>& otherLanguages) const
 	{
 		json::JSONBuilder localizationSettingsBuilder(CP_UTF8);
 
 		filesystem::create_directory(localizationFolder);
 
-		utility::makeLocalizationFile(mainLanguage, localizationFolder);
+		utility::makeLocalizationFile(originalLanguage, localizationFolder);
 
 		for (const auto& i : otherLanguages)
 		{
@@ -18,7 +18,7 @@ namespace commands
 		}
 	}
 
-	void GenerateCommand::repeat(const filesystem::path& localizationFolder, const string& mainLanguage, const vector<string>& otherLanguages) const
+	void GenerateCommand::repeat(const filesystem::path& localizationFolder, const string& originalLanguage, const vector<string>& otherLanguages) const
 	{
 		filesystem::directory_iterator it(localizationFolder);
 		unordered_map<string, string> localizationFiles;
@@ -32,15 +32,15 @@ namespace commands
 			localizationFiles[move(language)] = move(fileName);
 		}
 
-		if (localizationFiles.find(mainLanguage) == localizationFiles.end())
+		if (localizationFiles.find(originalLanguage) == localizationFiles.end())
 		{
-			localizationKeys.setJSONData((ostringstream() << ifstream(utility::makeLocalizationFile(mainLanguage, localizationFolder)).rdbuf()).str());
+			localizationKeys.setJSONData((ostringstream() << ifstream(utility::makeLocalizationFile(originalLanguage, localizationFolder)).rdbuf()).str());
 		}
 		else
 		{
-			string pathToMainLanguageLocalizationFile = (filesystem::path(global::startFolder) / global::localizationSettingsFile).string();
+			string pathToOriginalLanguageLocalizationFile = (filesystem::path(global::startFolder) / global::localizationSettingsFile).string();
 
-			localizationKeys.setJSONData((ostringstream() << ifstream(format(pathToMainLanguageLocalizationFile, mainLanguage)).rdbuf()).str());
+			localizationKeys.setJSONData((ostringstream() << ifstream(format(pathToOriginalLanguageLocalizationFile, originalLanguage)).rdbuf()).str());
 		}
 
 		if (otherLanguages.size() && (otherLanguages.size() - 1 < localizationFiles.size()))
@@ -49,7 +49,7 @@ namespace commands
 			{
 				if (localizationFiles.find(i) == localizationFiles.end())
 				{
-					utility::makeLocalizationFile(i, localizationFolder);
+					localizationFiles[i] = utility::makeLocalizationFile(i, localizationFolder).string();
 				}
 			}
 		}
@@ -63,7 +63,7 @@ namespace commands
 
 	void GenerateCommand::run() const
 	{
-		const string& mainLanguage = settings.getString(settings::mainLanguageSetting);
+		const string& originalLanguage = settings.getString(settings::originalLanguageSetting);
 		vector<string> otherLanguages = json::utility::JSONArrayWrapper(settings.getArray(settings::otherLanguagesSetting)).getAsStringArray();
 		filesystem::path localizationFolder;
 
@@ -73,11 +73,11 @@ namespace commands
 		
 		if (!filesystem::exists(localizationFolder))
 		{
-			this->start(localizationFolder, mainLanguage, otherLanguages);
+			this->start(localizationFolder, originalLanguage, otherLanguages);
 		}
 		else
 		{
-			this->repeat(localizationFolder, mainLanguage, otherLanguages);
+			this->repeat(localizationFolder, originalLanguage, otherLanguages);
 		}
 	}
 }
