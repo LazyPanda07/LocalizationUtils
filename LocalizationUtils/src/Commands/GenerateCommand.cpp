@@ -22,7 +22,7 @@ namespace commands
 	{
 		filesystem::directory_iterator it(localizationFolder);
 		unordered_map<string, string> localizationFiles;
-		vector<string> localizationKeys;
+		json::JSONParser localizationKeys;
 
 		for (const auto& i : it)
 		{
@@ -32,28 +32,15 @@ namespace commands
 			localizationFiles[move(language)] = move(fileName);
 		}
 
+		if (localizationFiles.find(originalLanguage) == localizationFiles.end())
 		{
-			json::JSONParser tem;
+			localizationKeys.setJSONData((ostringstream() << ifstream(utility::makeLocalizationFile(originalLanguage, localizationFolder)).rdbuf()).str());
+		}
+		else
+		{
+			string pathToOriginalLanguageLocalizationFile = (localizationFolder / global::localizationFile).string();
 
-			if (localizationFiles.find(originalLanguage) == localizationFiles.end())
-			{
-				tem.setJSONData((ostringstream() << ifstream(utility::makeLocalizationFile(originalLanguage, localizationFolder)).rdbuf()).str());
-			}
-			else
-			{
-				string pathToOriginalLanguageLocalizationFile = (localizationFolder / global::localizationFile).string();
-
-				tem.setJSONData((ostringstream() << ifstream(format(pathToOriginalLanguageLocalizationFile, originalLanguage)).rdbuf()).str());
-			}
-
-			auto& data = const_cast<vector<pair<string, json::utility::jsonObject::variantType>>&>(tem.getParsedData().data);
-			
-			localizationKeys.reserve(data.size());
-
-			for (auto& [key, _] : data)
-			{
-				localizationKeys.push_back(move(key));
-			}
+			localizationKeys.setJSONData((ostringstream() << ifstream(format(pathToOriginalLanguageLocalizationFile, originalLanguage)).rdbuf()).str());
 		}
 
 		if (otherLanguages.size() && (otherLanguages.size() - 1 < localizationFiles.size()))
@@ -62,14 +49,12 @@ namespace commands
 			{
 				if (localizationFiles.find(i) == localizationFiles.end())
 				{
-					json::JSONBuilder keysFromOriginal(CP_UTF8);
-
-					ranges::for_each(localizationKeys, [&keysFromOriginal](const string& key) { keysFromOriginal[key] = ""s; });
-
-					localizationFiles[i] = utility::makeLocalizationFile(i, localizationFolder, keysFromOriginal).string();
+					utility::makeLocalizationFile(i, localizationFolder, utility::copyOriginalLanguage(localizationKeys));
 				}
 			}
 		}
+
+
 	}
 
 	GenerateCommand::GenerateCommand(const json::JSONParser& settings) :
@@ -87,7 +72,7 @@ namespace commands
 		localizationFolder /= global::startFolder;
 
 		localizationFolder /= settings::localizationFolderName;
-		
+
 		if (!filesystem::exists(localizationFolder))
 		{
 			this->start(localizationFolder, originalLanguage, otherLanguages);
