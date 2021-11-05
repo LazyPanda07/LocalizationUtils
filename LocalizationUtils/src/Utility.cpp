@@ -13,7 +13,7 @@ namespace utility
 {
 	filesystem::path makeLocalizationFile(const string& language, const filesystem::path& pathToLocalizationFolder, const json::JSONBuilder& localizationData)
 	{
-		filesystem::path fileName = pathToLocalizationFolder / format(global::localizationSettingsFile, language);
+		filesystem::path fileName = pathToLocalizationFolder / format(global::localizationFile, language);
 
 		ofstream(fileName) << localizationData;
 

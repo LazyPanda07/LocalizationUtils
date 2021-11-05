@@ -6,7 +6,7 @@ namespace global
 {
 	inline std::string startFolder;
 
-	inline constexpr std::string_view localizationSettingsFile = "localization_settings_{}.json";
+	inline constexpr std::string_view localizationFile = "localization_{}.json";
 }
 
 namespace settings

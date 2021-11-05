@@ -41,7 +41,7 @@ namespace commands
 			}
 			else
 			{
-				string pathToOriginalLanguageLocalizationFile = (localizationFolder / global::localizationSettingsFile).string();
+				string pathToOriginalLanguageLocalizationFile = (localizationFolder / global::localizationFile).string();
 
 				tem.setJSONData((ostringstream() << ifstream(format(pathToOriginalLanguageLocalizationFile, originalLanguage)).rdbuf()).str());
 			}
