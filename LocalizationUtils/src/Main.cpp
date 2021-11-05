@@ -8,7 +8,7 @@
 
 using namespace std;
 
-int original(int argc, char** argv)
+int main(int argc, char** argv)
 {
 	if (argc == 1)
 	{
@@ -19,7 +19,14 @@ int original(int argc, char** argv)
 		return -1;
 	}
 
-	global::startFolder = string(argv[0], string_view(argv[0]).rfind('\\'));
+	if (string_view(argv[0]).find('\\') != string_view::npos)
+	{
+		global::startFolder = string(argv[0], string_view(argv[0]).rfind('\\'));
+	}
+	else
+	{
+		global::startFolder = filesystem::current_path().string();
+	}
 
 	if (!filesystem::exists(settings::settingsFile))
 	{
@@ -57,6 +64,12 @@ int original(int argc, char** argv)
 	catch (const bad_variant_access&)
 	{
 		cout << format(R"("{}" only accepts string values)"sv, settings::otherLanguagesSetting) << endl;
+
+		return -1;
+	}
+	catch (const out_of_range&)
+	{
+		cout << format(R"(Undefined command "{}")"sv, argv[1]) << endl;
 
 		return -1;
 	}

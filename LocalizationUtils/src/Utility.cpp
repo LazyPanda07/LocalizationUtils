@@ -11,11 +11,11 @@ using namespace std;
 
 namespace utility
 {
-	filesystem::path makeLocalizationFile(const string& language, const filesystem::path& pathToLocalizationFolder)
+	filesystem::path makeLocalizationFile(const string& language, const filesystem::path& pathToLocalizationFolder, const json::JSONBuilder& localizationData)
 	{
 		filesystem::path fileName = pathToLocalizationFolder / format(global::localizationSettingsFile, language);
 
-		ofstream(fileName) << json::JSONBuilder(CP_UTF8);
+		ofstream(fileName) << localizationData;
 
 		return fileName;
 	}

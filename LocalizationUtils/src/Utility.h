@@ -8,7 +8,7 @@
 
 namespace utility
 {
-	std::filesystem::path makeLocalizationFile(const std::string& language, const std::filesystem::path& pathToLocalizationFolder);
+	std::filesystem::path makeLocalizationFile(const std::string& language, const std::filesystem::path& pathToLocalizationFolder, const json::JSONBuilder& localizationData = json::JSONBuilder(CP_UTF8));
 
 	json::JSONBuilder copyOriginalLanguage(const json::JSONParser& originalLanguageKeys);
 }

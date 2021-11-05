@@ -22,7 +22,7 @@ namespace commands
 	{
 		filesystem::directory_iterator it(localizationFolder);
 		unordered_map<string, string> localizationFiles;
-		json::JSONParser localizationKeys;
+		vector<string> localizationKeys;
 
 		for (const auto& i : it)
 		{
@@ -32,15 +32,28 @@ namespace commands
 			localizationFiles[move(language)] = move(fileName);
 		}
 
-		if (localizationFiles.find(originalLanguage) == localizationFiles.end())
 		{
-			localizationKeys.setJSONData((ostringstream() << ifstream(utility::makeLocalizationFile(originalLanguage, localizationFolder)).rdbuf()).str());
-		}
-		else
-		{
-			string pathToOriginalLanguageLocalizationFile = (filesystem::path(global::startFolder) / global::localizationSettingsFile).string();
+			json::JSONParser tem;
 
-			localizationKeys.setJSONData((ostringstream() << ifstream(format(pathToOriginalLanguageLocalizationFile, originalLanguage)).rdbuf()).str());
+			if (localizationFiles.find(originalLanguage) == localizationFiles.end())
+			{
+				tem.setJSONData((ostringstream() << ifstream(utility::makeLocalizationFile(originalLanguage, localizationFolder)).rdbuf()).str());
+			}
+			else
+			{
+				string pathToOriginalLanguageLocalizationFile = (localizationFolder / global::localizationSettingsFile).string();
+
+				tem.setJSONData((ostringstream() << ifstream(format(pathToOriginalLanguageLocalizationFile, originalLanguage)).rdbuf()).str());
+			}
+
+			auto& data = const_cast<vector<pair<string, json::utility::jsonObject::variantType>>&>(tem.getParsedData().data);
+			
+			localizationKeys.reserve(data.size());
+
+			for (auto& [key, _] : data)
+			{
+				localizationKeys.push_back(move(key));
+			}
 		}
 
 		if (otherLanguages.size() && (otherLanguages.size() - 1 < localizationFiles.size()))
@@ -49,7 +62,11 @@ namespace commands
 			{
 				if (localizationFiles.find(i) == localizationFiles.end())
 				{
-					localizationFiles[i] = utility::makeLocalizationFile(i, localizationFolder).string();
+					json::JSONBuilder keysFromOriginal(CP_UTF8);
+
+					ranges::for_each(localizationKeys, [&keysFromOriginal](const string& key) { keysFromOriginal[key] = ""s; });
+
+					localizationFiles[i] = utility::makeLocalizationFile(i, localizationFolder, keysFromOriginal).string();
 				}
 			}
 		}
