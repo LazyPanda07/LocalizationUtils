@@ -20,13 +20,17 @@ namespace utility
 		return fileName;
 	}
 
-	json::JSONBuilder copyOriginalLanguage(const json::JSONParser& originalLanguageKeys)
+	json::JSONBuilder copyOriginalLanguage(const json::JSONParser& originalLanguageKeys, const unordered_set<string>& existingKeys)
 	{
 		json::JSONBuilder result(CP_UTF8);
+		unordered_set<string>::const_iterator endIterator = existingKeys.end();
 
 		for (const auto& i : originalLanguageKeys)
 		{
-			result[i->first] = ""s;
+			if (existingKeys.find(i->first) == endIterator)
+			{
+				result[i->first] = ""s;
+			}
 		}
 
 		return result;
