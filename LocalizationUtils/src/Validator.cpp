@@ -2,6 +2,14 @@
 
 using namespace std;
 
+void Validator::checkError(const string& setting, vector<string>& errors, json::utility::variantTypeEnum type) const
+{
+	if (!settings.contains(setting, type))
+	{
+		errors.push_back(format(R"(Can't find "{}" setting in "{}")"sv, setting, files::settingsFile));
+	}
+}
+
 Validator::Validator(const json::JSONParser& settings) :
 	settings(settings)
 {
@@ -10,19 +18,15 @@ Validator::Validator(const json::JSONParser& settings) :
 
 vector<string> Validator::validate() const
 {
-	using json::utility::variantTypeEnum;
-
 	vector<string> errors;
 
-	if (!settings.contains(settings::originalLanguageSetting, variantTypeEnum::jString))
-	{
-		errors.push_back(format(R"(Can't find "{}" setting in "{}")"sv, settings::originalLanguageSetting, settings::settingsFile));
-	}
+	this->checkError(settings::originalLanguageSetting, errors);
 
-	if (!settings.contains(settings::otherLanguagesSetting, variantTypeEnum::jJSONArray))
-	{
-		errors.push_back(format(R"(Can't find "{}" setting in "{}")"sv, settings::otherLanguagesSetting, settings::settingsFile));
-	}
+	this->checkError(settings::otherLanguagesSetting, errors, json::utility::variantTypeEnum::jJSONArray);
+
+	this->checkError(settings::outputFolderSetting, errors);
+
+	this->checkError(settings::pathToVisualStudioSetting, errors);
 
 	return errors;
 }

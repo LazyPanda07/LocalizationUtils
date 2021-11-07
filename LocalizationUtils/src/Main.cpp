@@ -28,16 +28,16 @@ int main(int argc, char** argv)
 		global::startFolder = filesystem::current_path().string();
 	}
 
-	if (!filesystem::exists(settings::settingsFile))
+	if (!filesystem::exists(files::settingsFile))
 	{
-		cout << format(R"(Can't find "{}" file)"sv, settings::settingsFile) << endl;
+		cout << format(R"(Can't find "{}" file)"sv, files::settingsFile) << endl;
 
 		system("pause");
 
 		return -1;
 	}
 
-	json::JSONParser settings = ifstream(settings::settingsFile);
+	json::JSONParser settings = ifstream(files::settingsFile);
 
 	Validator validator(settings);
 

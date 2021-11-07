@@ -19,11 +19,14 @@ namespace utility
 	inline constexpr uint32_t codepage = 1251;
 }
 
-namespace settings
+namespace files
 {
 	inline constexpr std::string_view settingsFile = "localization_utils_settings.json";
 	inline constexpr std::string_view metaFile = "localization_meta.json";
+}
 
+namespace settings
+{
 	inline const std::string originalLanguageSetting = "originalLanguage";
 	inline const std::string otherLanguagesSetting = "otherLanguages";
 	inline const std::string pathToVisualStudioSetting = "pathToVisualStudio";

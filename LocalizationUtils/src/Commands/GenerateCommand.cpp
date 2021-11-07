@@ -17,7 +17,7 @@ namespace commands
 			metaBuilder[i] = encoding::SHA256::getHash((ostringstream() << ifstream(utility::makeLocalizationFile(i, localizationFolder)).rdbuf()).str());
 		}
 
-		ofstream(localizationFolder / settings::metaFile) << metaBuilder;
+		ofstream(localizationFolder / files::metaFile) << metaBuilder;
 	}
 
 	void GenerateCommand::repeat(const filesystem::path& localizationFolder, const string& originalLanguage, const vector<string>& otherLanguages) const
@@ -25,13 +25,13 @@ namespace commands
 		filesystem::directory_iterator it(localizationFolder);
 		unordered_map<string, string> localizationFiles;
 		json::JSONParser localizationKeys;
-		json::JSONParser metaParser = ifstream(localizationFolder / settings::metaFile);
+		json::JSONParser metaParser = ifstream(localizationFolder / files::metaFile);
 
 		for (const auto& i : it)
 		{
 			string fileName = i.path().string();
 
-			if (fileName.find(settings::metaFile) != string::npos)
+			if (fileName.find(files::metaFile) != string::npos)
 			{
 				continue;
 			}
@@ -128,7 +128,7 @@ namespace commands
 			updateMetaBuilder[language] = move(hash);
 		}
 
-		ofstream(localizationFolder / settings::metaFile) << updateMetaBuilder;
+		ofstream(localizationFolder / files::metaFile) << updateMetaBuilder;
 	}
 
 	GenerateCommand::GenerateCommand(const json::JSONParser& settings) :
