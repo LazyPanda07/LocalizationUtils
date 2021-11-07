@@ -24,9 +24,12 @@ vector<string> Validator::validate() const
 
 	this->checkError(settings::otherLanguagesSetting, errors, json::utility::variantTypeEnum::jJSONArray);
 
-	this->checkError(settings::debugOutputFolderSetting, errors);
+	if (global::outputFolder.empty())
+	{
+		this->checkError(settings::debugOutputFolderSetting, errors);
 
-	this->checkError(settings::releaseOutputFolderSetting, errors);
+		this->checkError(settings::releaseOutputFolderSetting, errors);
+	}
 
 	this->checkError(settings::pathToVisualStudioSetting, errors);
 
