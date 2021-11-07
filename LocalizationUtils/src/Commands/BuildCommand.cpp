@@ -11,7 +11,7 @@ namespace commands
 		buildCommand(buildCommand),
 		outputFolder(outputFolder)
 	{
-		if (outputFolder.back() != '/' && outputFolder.back() != '\\')
+		if (outputFolder.size() && (outputFolder.back() != '/' && outputFolder.back() != '\\'))
 		{
 			this->outputFolder += '\\';
 		}

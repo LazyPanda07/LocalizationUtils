@@ -19,6 +19,11 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
+	if (argc == 3)
+	{
+		global::outputFolder = argv[2];
+	}
+
 	if (string_view(argv[0]).find('\\') != string_view::npos)
 	{
 		global::startFolder = string(argv[0], string_view(argv[0]).rfind('\\'));

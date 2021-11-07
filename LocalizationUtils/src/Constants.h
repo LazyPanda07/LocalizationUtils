@@ -5,6 +5,7 @@
 namespace global
 {
 	inline std::string startFolder;
+	inline std::string outputFolder;
 
 	inline constexpr std::string_view localizationFile = "localization_{}.json";
 }
