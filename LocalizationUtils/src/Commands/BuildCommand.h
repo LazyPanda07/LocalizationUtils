@@ -8,9 +8,10 @@ namespace commands
 	{
 	private:
 		const std::string_view* buildCommand;
+		std::string outputFolder;
 
 	public:
-		BuildCommand(const json::JSONParser& settings, const std::string_view* buildCommand);
+		BuildCommand(const json::JSONParser& settings, const std::string_view* buildCommand, const std::string& outputFolder);
 
 		void run() const override;
 

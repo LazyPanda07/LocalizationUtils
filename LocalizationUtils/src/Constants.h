@@ -30,7 +30,8 @@ namespace settings
 	inline const std::string originalLanguageSetting = "originalLanguage";
 	inline const std::string otherLanguagesSetting = "otherLanguages";
 	inline const std::string pathToVisualStudioSetting = "pathToVisualStudio";
-	inline const std::string outputFolderSetting = "outputFolder";
+	inline const std::string debugOutputFolderSetting = "debugOutputFolder";
+	inline const std::string releaseOutputFolderSetting = "releaseOutputFolder";
 }
 
 namespace folders
