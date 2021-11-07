@@ -29,4 +29,5 @@ namespace settings
 namespace commands_names
 {
 	inline constexpr std::string_view generate_command = "generate";
+	inline constexpr std::string_view save_command = "save";
 }

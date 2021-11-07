@@ -26,16 +26,16 @@ namespace commands
 		unordered_map<string, string> localizationFiles;
 		json::JSONParser localizationKeys;
 		json::JSONParser metaParser = ifstream(localizationFolder / settings::metaFile);
-		encoding::SHA256 currentOriginalHash;
 
 		for (const auto& i : it)
 		{
-			if (i.path().string().find(settings::metaFile) != string::npos)
+			string fileName = i.path().string();
+
+			if (fileName.find(settings::metaFile) != string::npos)
 			{
 				continue;
 			}
 
-			string fileName = i.path().string();
 			string language = string(fileName.begin() + fileName.rfind('_') + 1, fileName.begin() + fileName.rfind('.'));
 
 			localizationFiles[move(language)] = move(fileName);
@@ -65,53 +65,67 @@ namespace commands
 			}
 		}
 
-		for (const auto& i : localizationKeys)
-		{
-			currentOriginalHash.update(i->first);
-		}
-
-		const string& previousOriginalHash = metaParser.getString(originalLanguage);
-
-		if (currentOriginalHash.getHash() == previousOriginalHash)
-		{
-			return;
-		}
-
+		const string& previousHash = metaParser.getString(originalLanguage);
+		encoding::SHA256 currentHash;
+		unordered_map<string, string> updatedHashes;
 		json::JSONBuilder updateMetaBuilder(metaParser.getParsedData(), CP_UTF8);
 
-		for (const auto& i : otherLanguages)
+		for (const auto& i : localizationKeys)
 		{
-			const string& pathToCurrentFile = localizationFiles[i];
-			json::JSONParser languageParser = ifstream(pathToCurrentFile);
-			
-			if (encoding::SHA256::getHash(languageParser.getRawData()) == metaParser.getString(i))
+			currentHash.update(i->first);
+		}
+
+		if (currentHash.getHash() != previousHash)
+		{
+			updateMetaBuilder[originalLanguage] = currentHash.getHash();
+
+			for (const auto& i : otherLanguages)
 			{
-				continue;
+				const string& pathToCurrentFile = localizationFiles[i];
+				json::JSONParser languageParser = ifstream(pathToCurrentFile);
+
+				unordered_set<string> existingKeys;
+				unordered_map<const string*, const string*> values;
+
+				existingKeys.reserve(languageParser.getParsedData().data.size());
+				values.reserve(languageParser.getParsedData().data.size());
+
+				for (const auto& j : languageParser)
+				{
+					const string& key = *existingKeys.insert(j->first).first;
+
+					values[&key] = &get<string>(j->second);
+				}
+
+				json::JSONBuilder updateBuilder = utility::copyOriginalLanguage(localizationKeys, existingKeys);
+
+				for (const auto& [key, value] : values)
+				{
+					updateBuilder[*key] = *value;
+				}
+
+				ofstream(pathToCurrentFile) << updateBuilder;
+				updatedHashes[i] = encoding::SHA256::getHash((ostringstream() << ifstream(pathToCurrentFile).rdbuf()).str());
 			}
-
-			unordered_set<string> existingKeys;
-			unordered_map<const string*, const string*> values;
-
-			existingKeys.reserve(languageParser.getParsedData().data.size());
-			values.reserve(languageParser.getParsedData().data.size());
-
-			for (const auto& j : languageParser)
+		}
+		else
+		{
+			for (const auto& i : otherLanguages)
 			{
-				const string& key = *existingKeys.insert(j->first).first;
+				string checkHash = encoding::SHA256::getHash((ostringstream() << ifstream(localizationFiles[i]).rdbuf()).str());
 
-				values[&key] = &get<string>(j->second);
+				if (checkHash == metaParser.getString(i))
+				{
+					continue;
+				}
+
+				updatedHashes[i] = move(checkHash);
 			}
+		}
 
-			json::JSONBuilder updateBuilder = utility::copyOriginalLanguage(localizationKeys, existingKeys);
-
-			for (const auto& [key, value] : values)
-			{
-				updateBuilder[*key] = *value;
-			}
-
-			ofstream(pathToCurrentFile) << updateBuilder;
-
-			updateMetaBuilder[i] = encoding::SHA256::getHash(json::JSONParser(ifstream(pathToCurrentFile)).getRawData());
+		for (auto& [language, hash] : updatedHashes)
+		{
+			updateMetaBuilder[language] = move(hash);
 		}
 
 		ofstream(localizationFolder / settings::metaFile) << updateMetaBuilder;

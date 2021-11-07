@@ -73,6 +73,12 @@ int main(int argc, char** argv)
 
 		return -1;
 	}
+	catch (const runtime_error& e)
+	{
+		cout << e.what() << endl;
+
+		return -1;
+	}
 
 	return 0;
 }
