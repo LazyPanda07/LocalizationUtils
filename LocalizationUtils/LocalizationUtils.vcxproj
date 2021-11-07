@@ -169,8 +169,11 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Commands\BuildCommand.cpp" />
+    <ClCompile Include="src\Commands\DebugBuildCommand.cpp" />
     <ClCompile Include="src\Commands\GenerateCommand.cpp" />
     <ClCompile Include="src\Commands\ICommand.cpp" />
+    <ClCompile Include="src\Commands\ReleaseBuildCommand.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\Runner.cpp" />
     <ClCompile Include="src\Utility.cpp" />
@@ -188,8 +191,11 @@
     <None Include="localization_utils_settings.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Commands\BuildCommand.h" />
+    <ClInclude Include="src\Commands\DebugBuildCommand.h" />
     <ClInclude Include="src\Commands\GenerateCommand.h" />
     <ClInclude Include="src\Commands\ICommand.h" />
+    <ClInclude Include="src\Commands\ReleaseBuildCommand.h" />
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\headers.h" />
     <ClInclude Include="src\Runner.h" />

@@ -145,7 +145,7 @@ namespace commands
 
 		localizationFolder /= global::startFolder;
 
-		localizationFolder /= settings::localizationFolderName;
+		localizationFolder /= folders::localizationFolder;
 
 		if (!filesystem::exists(localizationFolder))
 		{
