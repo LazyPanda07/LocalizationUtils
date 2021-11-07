@@ -2,15 +2,16 @@
 
 using namespace std;
 
-void LocalizationSourceFileGenerator::appendCore(ofstream& cppFile) const
+void LocalizationSourceFileGenerator::appendCore(ofstream& cppFile, const string& originalLanguage) const
 {
-	cppFile << utility::convertToUTF8(R"(#include <unordered_map>
+	cppFile << utility::convertToUTF8(format(R"(#include <unordered_map>
 
 using namespace std;
 
-#define LOCALIZATION_API __declspec(dllexport)
+#define LOCALIZATION_API extern "C" __declspec(dllexport)
 
-)");
+LOCALIZATION_API const string originalLanguage = {};
+)"sv, originalLanguage));
 }
 
 void LocalizationSourceFileGenerator::appendLanguage(ofstream& cppFile, const json::JSONParser& dictionary, const string& language) const
@@ -83,7 +84,7 @@ void LocalizationSourceFileGenerator::generate() const
 
 	languages.insert(languages.begin(), settings.getString(settings::originalLanguageSetting));
 
-	this->appendCore(cppFile);
+	this->appendCore(cppFile, settings.getString(settings::originalLanguageSetting));
 
 	for (const auto& i : it)
 	{

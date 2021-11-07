@@ -9,7 +9,7 @@ private:
 	std::filesystem::path localizationFolder;
 
 private:
-	void appendCore(std::ofstream& cppFile) const;
+	void appendCore(std::ofstream& cppFile, const std::string& originalLanguage) const;
 
 	void appendLanguage(std::ofstream& cppFile, const json::JSONParser& dictionary, const std::string& language) const;
 
