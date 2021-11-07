@@ -18,6 +18,8 @@ namespace build
 namespace utility
 {
 	inline constexpr uint32_t codepage = 1251;
+
+	inline const std::string buildHashUtilitySetting = "buildHash";
 }
 
 namespace files
