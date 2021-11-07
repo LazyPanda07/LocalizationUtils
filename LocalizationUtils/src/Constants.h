@@ -23,6 +23,8 @@ namespace files
 {
 	inline constexpr std::string_view settingsFile = "localization_utils_settings.json";
 	inline constexpr std::string_view metaFile = "localization_meta.json";
+
+	inline constexpr std::string_view generatedCPPFile = "localization.cpp";
 }
 
 namespace settings

@@ -35,4 +35,9 @@ namespace utility
 
 		return result;
 	}
+
+	string convertToUTF8(const string& text)
+	{
+		return json::utility::toUTF8JSON(text, codepage);
+	}
 }

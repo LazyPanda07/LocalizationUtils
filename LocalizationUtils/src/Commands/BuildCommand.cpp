@@ -1,5 +1,7 @@
 #include "BuildCommand.h"
 
+#include "LocalizationSourceFileGenerator.h"
+
 using namespace std;
 
 namespace commands
@@ -38,7 +40,9 @@ namespace commands
 			filesystem::create_directory(intermediateFolder);
 		}
 
-		ofstream(intermediateFolder / "test.cpp") << "#include <unordered_map>";
+		LocalizationSourceFileGenerator generator(settings);
+
+		generator.generate();
 
 		string build = format(*buildCommand, outputFolder);
 

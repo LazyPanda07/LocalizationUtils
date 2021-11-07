@@ -4,6 +4,6 @@
     "ru"
   ],
   "pathToVisualStudio": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community",
-  "debugOutputFolder": "C:\\Users\\semen\\source\\repos\\LocalizationUtils\\bin\\Debug-x64\\LocalizationUtils\\out",
-  "releaseOutputFolder": "C:\\Users\\semen\\source\\repos\\LocalizationUtils\\bin\\Debug-x64\\LocalizationUtils\\out"
+  "debugOutputFolder": "",
+  "releaseOutputFolder": ""
 }
