@@ -11,7 +11,7 @@ private:
 private:
 	void appendCore(std::ofstream& cppFile, const std::string& originalLanguage) const;
 
-	void appendLanguage(std::ofstream& cppFile, const json::JSONParser& dictionary, const std::string& language) const;
+	bool appendLanguage(std::ofstream& cppFile, const json::JSONParser& dictionary, const std::string& language) const;
 
 	void appendDictionaryWithAllLanguages(std::ofstream& cppFile, const std::vector<std::string>& languages) const;
 

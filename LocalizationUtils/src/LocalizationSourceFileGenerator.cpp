@@ -10,17 +10,17 @@ using namespace std;
 
 #define LOCALIZATION_API extern "C" __declspec(dllexport)
 
-LOCALIZATION_API const string originalLanguage = {};
+LOCALIZATION_API const string originalLanguage = "{}";
 )"sv, originalLanguage));
 }
 
-void LocalizationSourceFileGenerator::appendLanguage(ofstream& cppFile, const json::JSONParser& dictionary, const string& language) const
+bool LocalizationSourceFileGenerator::appendLanguage(ofstream& cppFile, const json::JSONParser& dictionary, const string& language) const
 {
 	using namespace utility;
 
 	if (dictionary.getParsedData().data.empty())
 	{
-		return;
+		return false;
 	}
 
 	string result = convertToUTF8(format(R"(LOCALIZATION_API const unordered_map<string, string> {}Dictionary = 
@@ -41,6 +41,8 @@ void LocalizationSourceFileGenerator::appendLanguage(ofstream& cppFile, const js
 	result += convertToUTF8("\n};\n");
 
 	cppFile << result << endl;
+
+	return true;
 }
 
 void LocalizationSourceFileGenerator::appendDictionaryWithAllLanguages(ofstream& cppFile, const vector<string>& languages) const
@@ -102,7 +104,10 @@ void LocalizationSourceFileGenerator::generate() const
 			continue;
 		}
 
-		this->appendLanguage(cppFile, json::JSONParser(ifstream(fileName)), language);
+		if (!this->appendLanguage(cppFile, json::JSONParser(ifstream(fileName)), language))
+		{
+			erase(languages, language);
+		}
 	}
 
 	this->appendDictionaryWithAllLanguages(cppFile, languages);
