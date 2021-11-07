@@ -49,6 +49,11 @@ void LocalizationSourceFileGenerator::appendDictionaryWithAllLanguages(ofstream&
 {
 	using namespace utility;
 
+	if (languages.empty())
+	{
+		return;
+	}
+
 	string result = convertToUTF8("LOCALIZATION_API const unordered_map<string, const unordered_map<string, string>*> dictionaries = \n{");
 
 	for (const auto& i : languages)
