@@ -6,7 +6,7 @@ void Validator::checkError(const string& setting, vector<string>& errors, json::
 {
 	if (!settings.contains(setting, type))
 	{
-		errors.push_back(format(R"(Can't find "{}" setting in "{}")"sv, setting, files::settingsFile));
+		errors.push_back(format(R"(Can't find "{}" setting in "{}")"sv, setting, global::settingsFile));
 	}
 }
 

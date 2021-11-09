@@ -19,9 +19,14 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	if (argc == 3)
+	if (argc > 2)
 	{
 		global::outputFolder = argv[2];
+	}
+
+	if (argc == 4)
+	{
+		global::settingsFile = argv[3];
 	}
 
 	if (string_view(argv[0]).find('\\') != string_view::npos)
@@ -33,16 +38,16 @@ int main(int argc, char** argv)
 		global::startFolder = filesystem::current_path().string();
 	}
 
-	if (!filesystem::exists(files::settingsFile))
+	if (!filesystem::exists(global::settingsFile))
 	{
-		cout << format(R"(Can't find "{}" file)"sv, files::settingsFile) << endl;
+		cout << format(R"(Can't find "{}" file)"sv, global::settingsFile) << endl;
 
 		system("pause");
 
 		return -1;
 	}
 
-	json::JSONParser settings = ifstream(files::settingsFile);
+	json::JSONParser settings = ifstream(global::settingsFile);
 
 	Validator validator(settings);
 

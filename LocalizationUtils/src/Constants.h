@@ -8,6 +8,8 @@ namespace global
 	inline std::string outputFolder;
 
 	inline constexpr std::string_view localizationFile = "localization_{}.json";
+
+	inline std::string_view settingsFile = "localization_utils_settings.json";
 }
 
 namespace build
@@ -24,7 +26,6 @@ namespace utility
 
 namespace files
 {
-	inline constexpr std::string_view settingsFile = "localization_utils_settings.json";
 	inline constexpr std::string_view metaFile = "localization_meta.json";
 
 	inline constexpr std::string_view generatedCPPFile = "localization.cpp";
