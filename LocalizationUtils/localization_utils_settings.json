@@ -3,7 +3,7 @@
   "otherLanguages": [
     "ru"
   ],
-  "pathToVisualStudio": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community",
+  "pathToVisualStudio": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community",
   "debugOutputFolder": "",
   "releaseOutputFolder": ""
 }
