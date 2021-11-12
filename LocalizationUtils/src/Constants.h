@@ -9,7 +9,7 @@ namespace global
 
 	inline constexpr std::string_view localizationFile = "localization_{}.json";
 
-	inline std::string_view settingsFile = "localization_utils_settings.json";
+	inline std::string settingsFile = "localization_utils_settings.json";
 }
 
 namespace build
@@ -49,6 +49,7 @@ namespace folders
 namespace commands_names
 {
 	inline constexpr std::string_view generate_command = "generate";
+	inline constexpr std::string_view generate_settings_file_command = "generate_settings_file";
 	inline constexpr std::string_view debug_build_command = "debug_build";
 	inline constexpr std::string_view release_build_command = "release_build";
 }

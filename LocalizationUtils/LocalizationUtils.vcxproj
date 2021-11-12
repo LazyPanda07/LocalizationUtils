@@ -105,6 +105,7 @@
     <ClCompile Include="src\Commands\BuildCommand.cpp" />
     <ClCompile Include="src\Commands\DebugBuildCommand.cpp" />
     <ClCompile Include="src\Commands\GenerateCommand.cpp" />
+    <ClCompile Include="src\Commands\GenerateSettingsFile.cpp" />
     <ClCompile Include="src\Commands\ICommand.cpp" />
     <ClCompile Include="src\Commands\ReleaseBuildCommand.cpp" />
     <ClCompile Include="src\LocalizationSourceFileGenerator.cpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="src\Commands\BuildCommand.h" />
     <ClInclude Include="src\Commands\DebugBuildCommand.h" />
     <ClInclude Include="src\Commands\GenerateCommand.h" />
+    <ClInclude Include="src\Commands\GenerateSettingsFile.h" />
     <ClInclude Include="src\Commands\ICommand.h" />
     <ClInclude Include="src\Commands\ReleaseBuildCommand.h" />
     <ClInclude Include="src\Constants.h" />

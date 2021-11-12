@@ -3,6 +3,8 @@
 #include "Runner.h"
 #include "Validator.h"
 
+#include "Commands/GenerateSettingsFile.h"
+
 #pragma comment(lib, "JSON.lib")
 #pragma comment(lib, "SHA256.lib")
 
@@ -21,7 +23,23 @@ int main(int argc, char** argv)
 
 	if (argc > 2)
 	{
-		global::settingsFile = argv[2];	
+		if (filesystem::is_directory(argv[2]))
+		{
+			string_view tem = argv[2];
+
+			if (tem.back() == '\\' || tem.back() == '/')
+			{
+				global::settingsFile = string(tem).append(global::settingsFile);
+			}
+			else
+			{
+				global::settingsFile = string(tem).append("\\").append(global::settingsFile);
+			}
+		}
+		else
+		{
+			global::settingsFile = argv[2];
+		}	
 	}
 
 	if (argc == 4)
@@ -38,6 +56,13 @@ int main(int argc, char** argv)
 		global::startFolder = filesystem::current_path().string();
 	}
 
+	if (argv[1] == commands_names::generate_settings_file_command)
+	{
+		commands::GenerateSettingsFile(json::JSONParser()).run();
+
+		return 0;
+	}
+
 	if (!filesystem::exists(global::settingsFile))
 	{
 		cout << format(R"(Can't find "{}" file)"sv, global::settingsFile) << endl;
@@ -47,7 +72,7 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	json::JSONParser settings = ifstream(global::settingsFile.data());
+	json::JSONParser settings = ifstream(global::settingsFile);
 
 	Validator validator(settings);
 
