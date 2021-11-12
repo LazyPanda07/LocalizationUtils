@@ -69,7 +69,7 @@ int main(int argc, char** argv)
 
 		system("pause");
 
-		return -1;
+		return -2;
 	}
 
 	json::JSONParser settings = ifstream(global::settingsFile);
@@ -87,7 +87,7 @@ int main(int argc, char** argv)
 
 		system("pause");
 
-		return -1;
+		return -3;
 	}
 
 	Runner runner(settings);
@@ -100,19 +100,19 @@ int main(int argc, char** argv)
 	{
 		cout << format(R"("{}" only accepts string values)"sv, settings::otherLanguagesSetting) << endl;
 
-		return -1;
+		return -4;
 	}
 	catch (const out_of_range&)
 	{
 		cout << format(R"(Undefined command "{}")"sv, argv[1]) << endl;
 
-		return -1;
+		return -5;
 	}
 	catch (const runtime_error& e)
 	{
 		cout << e.what() << endl;
 
-		return -1;
+		return -6;
 	}
 
 	return 0;
