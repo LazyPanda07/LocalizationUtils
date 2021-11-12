@@ -20,9 +20,9 @@ namespace commands
 		json::JSONBuilder settingsFile(utility::codepage);
 		vector<json::utility::objectSmartPointer<json::utility::jsonObject>> otherLanguages;
 
-		settingsFile[settings::originalLanguageSetting] = ""s;
+		settingsFile[settings::originalLanguageSetting] = "en"s;
 		settingsFile[settings::otherLanguagesSetting] = move(otherLanguages);
-		settingsFile[settings::pathToVisualStudioSetting] = ""s;
+		settingsFile.appendString(settings::pathToVisualStudioSetting, R"(C:\\Program Files\\Microsoft Visual Studio\\2022\\Community)");
 		settingsFile[settings::debugOutputFolderSetting] = ""s;
 		settingsFile[settings::releaseOutputFolderSetting] = ""s;
 
