@@ -141,11 +141,7 @@ namespace commands
 	{
 		const string& originalLanguage = settings.getString(settings::originalLanguageSetting);
 		vector<string> otherLanguages = json::utility::JSONArrayWrapper(settings.getArray(settings::otherLanguagesSetting)).getAsStringArray();
-		filesystem::path localizationFolder;
-
-		localizationFolder /= global::startFolder;
-
-		localizationFolder /= folders::localizationFolder;
+		filesystem::path localizationFolder = utility::makePath(global::startFolder, folders::localizationFolder);
 
 		if (!filesystem::exists(localizationFolder))
 		{
