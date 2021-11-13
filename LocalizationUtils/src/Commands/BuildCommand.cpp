@@ -2,6 +2,8 @@
 
 #include "LocalizationSourceFileGenerator.h"
 
+#pragma warning(disable: 4305)
+
 using namespace std;
 
 namespace commands
@@ -19,20 +21,12 @@ namespace commands
 
 	void BuildCommand::run() const
 	{
-		filesystem::path pathToBuildTools;
-		filesystem::path intermediateFolder;
-		filesystem::path pathToMetaFile = filesystem::path(global::startFolder) / filesystem::path(folders::localizationFolder) / files::metaFile;
+		filesystem::path pathToBuildTools = utility::makePath(settings.getString(settings::pathToVisualStudioSetting), build::pathTox64Tools);
+		filesystem::path intermediateFolder = utility::makePath(global::startFolder, folders::intermediateFolder);
+		filesystem::path pathToMetaFile = utility::makePath(global::startFolder, folders::localizationFolder, files::metaFile);
 		json::JSONParser metaParser = ifstream(pathToMetaFile);
 		string newBuildHash;
 		bool updateHash = false;
-
-		pathToBuildTools /= settings.getString(settings::pathToVisualStudioSetting);
-
-		pathToBuildTools /= build::pathTox64Tools;
-
-		intermediateFolder /= global::startFolder;
-
-		intermediateFolder /= folders::intermediateFolder;
 
 		if (!filesystem::exists(pathToBuildTools))
 		{

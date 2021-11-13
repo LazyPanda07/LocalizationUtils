@@ -14,4 +14,28 @@ namespace utility
 	json::JSONBuilder copyOriginalLanguage(const json::JSONParser& originalLanguageKeys, const std::unordered_set<std::string>& existingKeys = std::unordered_set<std::string>());
 
 	std::string convertToUTF8(const std::string& text);
+
+	std::filesystem::path generateSettingsFile();
+
+	template<typename T, typename... Args>
+	std::string makePath(T&& part, Args&&... args)
+	{
+		if constexpr (sizeof...(args))
+		{
+			std::string tem(part);
+
+			if (tem.back() == '\\' || tem.back() == '/')
+			{
+				return std::move(tem) + makePath(std::forward<Args>(args)...);
+			}
+			else
+			{
+				return std::move(tem) + '\\' + makePath(std::forward<Args>(args)...);
+			}
+		}
+		else
+		{
+			return std::string(part);
+		}
+	}
 }

@@ -40,4 +40,27 @@ namespace utility
 	{
 		return json::utility::toUTF8JSON(text, codepage);
 	}
+
+	filesystem::path generateSettingsFile()
+	{
+		filesystem::path pathToSettinsFile = utility::makePath(global::startFolder, global::settingsFile);
+
+		if (filesystem::exists(pathToSettinsFile))
+		{
+			return pathToSettinsFile;
+		}
+
+		json::JSONBuilder settingsFile(utility::codepage);
+		vector<json::utility::objectSmartPointer<json::utility::jsonObject>> otherLanguages;
+
+		settingsFile[settings::originalLanguageSetting] = "en"s;
+		settingsFile[settings::otherLanguagesSetting] = move(otherLanguages);
+		settingsFile.appendString(settings::pathToVisualStudioSetting, R"(C:\\Program Files\\Microsoft Visual Studio\\2022\\Community)");
+		settingsFile[settings::debugOutputFolderSetting] = ""s;
+		settingsFile[settings::releaseOutputFolderSetting] = ""s;
+
+		ofstream(pathToSettinsFile) << settingsFile;
+
+		return pathToSettinsFile;
+	}
 }
