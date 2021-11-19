@@ -54,7 +54,7 @@ namespace commands
 
 		localizationFiles.erase(originalLanguage);
 
-		if (otherLanguages.size() && (otherLanguages.size() - 1 < localizationFiles.size()))
+		if (otherLanguages.size() != localizationFiles.size())
 		{
 			for (const auto& i : otherLanguages)
 			{
@@ -114,7 +114,7 @@ namespace commands
 			{
 				string checkHash = encoding::SHA256::getHash((ostringstream() << ifstream(localizationFiles[i]).rdbuf()).str());
 
-				if (checkHash == metaParser.getString(i))
+				if (metaParser.contains(i, json::utility::variantTypeEnum::jString) && checkHash == metaParser.getString(i))
 				{
 					continue;
 				}
