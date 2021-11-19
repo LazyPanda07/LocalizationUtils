@@ -10,12 +10,22 @@ namespace commands
 {
 	void BuildCommand::copyDLL() const
 	{
+		if (global::outputFolder == outputFolder)
+		{
+			return;
+		}
+
 		if (!filesystem::exists(global::outputFolder))
 		{
 			filesystem::create_directories(global::outputFolder);
 		}
 
-		filesystem::copy(utility::makePath(outputFolder, "Localization.dll"), global::outputFolder, filesystem::copy_options::overwrite_existing);
+		filesystem::copy
+		(
+			utility::makePath(outputFolder, "Localization.dll"),
+			utility::makePath(global::outputFolder, "Localization.dll"),
+			filesystem::copy_options::overwrite_existing
+		);
 	}
 
 	BuildCommand::BuildCommand(const json::JSONParser& settings, const string_view* buildCommand, const string& outputFolder) :
