@@ -21,8 +21,6 @@ int main(int argc, char** argv)
 	else if (argc == 4)
 	{
 		global::outputFolder = argv[3];
-
-		utility::appendSlash(global::outputFolder);
 	}
 
 	global::startFolder = argv[1];
