@@ -8,6 +8,16 @@ using namespace std;
 
 namespace commands
 {
+	void BuildCommand::copyDLL() const
+	{
+		if (!filesystem::exists(global::outputFolder))
+		{
+			filesystem::create_directories(global::outputFolder);
+		}
+
+		filesystem::copy(utility::makePath(outputFolder, "Localization.dll"), global::outputFolder, filesystem::copy_options::overwrite_existing);
+	}
+
 	BuildCommand::BuildCommand(const json::JSONParser& settings, const string_view* buildCommand, const string& outputFolder) :
 		ICommand(settings),
 		buildCommand(buildCommand),
@@ -61,6 +71,8 @@ namespace commands
 
 		if (filesystem::exists(utility::makePath(outputFolder, "Localization.dll")) && !updateHash)
 		{
+			this->copyDLL();
+
 			return;
 		}
 
@@ -72,12 +84,7 @@ namespace commands
 
 		if (global::outputFolder.size() && global::outputFolder != outputFolder)
 		{
-			if (!filesystem::exists(global::outputFolder))
-			{
-				filesystem::create_directories(global::outputFolder);
-			}
-
-			filesystem::copy(outputFolder + "Localization.dll", global::outputFolder);
+			this->copyDLL();
 		}
 
 		if (updateHash)

@@ -10,6 +10,9 @@ namespace commands
 		const std::string_view* buildCommand;
 		std::string outputFolder;
 
+	private:
+		void copyDLL() const;
+
 	public:
 		BuildCommand(const json::JSONParser& settings, const std::string_view* buildCommand, const std::string& outputFolder);
 
