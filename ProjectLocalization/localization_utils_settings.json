@@ -1,0 +1,9 @@
+{
+  "originalLanguage": "en",
+  "otherLanguages": [
+    "ru"
+  ],
+  "pathToVisualStudio": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community",
+  "debugOutputFolder": "C:\\Users\\semen\\source\\repos\\Test\\bin\\Debug-x64\\Test",
+  "releaseOutputFolder": "C:\\Users\\semen\\source\\repos\\Test\\bin\\Release-x64\\Test"
+}

@@ -48,14 +48,20 @@ namespace commands
 		}
 
 		newBuildHash = newHash.getHash();
+		updateHash =
+			!metaParser.contains(utility::buildHashUtilitySetting, json::utility::variantTypeEnum::jString) ||
+			newBuildHash != metaParser.getString(utility::buildHashUtilitySetting);
 
-		if (!metaParser.contains(utility::buildHashUtilitySetting, json::utility::variantTypeEnum::jString) || newBuildHash != metaParser.getString(utility::buildHashUtilitySetting))
+		if (!filesystem::exists(intermediateFolder / files::generatedCPPFile) || updateHash)
 		{
 			LocalizationSourceFileGenerator generator(settings);
 
 			generator.generate();
+		}
 
-			updateHash = true;
+		if (filesystem::exists(utility::makePath(outputFolder, "Localization.dll")) && !updateHash)
+		{
+			return;
 		}
 
 		string build = format(*buildCommand, outputFolder);
