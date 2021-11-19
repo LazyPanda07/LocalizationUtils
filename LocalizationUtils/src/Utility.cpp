@@ -63,4 +63,12 @@ namespace utility
 
 		return pathToSettinsFile;
 	}
+
+	void appendSlash(string& source)
+	{
+		if (source.size() && (source.back() != '/' && source.back() != '\\'))
+		{
+			source += '\\';
+		}
+	}
 }

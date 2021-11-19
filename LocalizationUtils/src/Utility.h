@@ -17,6 +17,8 @@ namespace utility
 
 	std::filesystem::path generateSettingsFile();
 
+	void appendSlash(std::string& source);
+
 	template<typename T, typename... Args>
 	std::string makePath(T&& part, Args&&... args)
 	{

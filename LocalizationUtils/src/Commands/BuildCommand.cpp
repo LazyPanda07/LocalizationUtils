@@ -13,10 +13,7 @@ namespace commands
 		buildCommand(buildCommand),
 		outputFolder(outputFolder)
 	{
-		if (outputFolder.size() && (outputFolder.back() != '/' && outputFolder.back() != '\\'))
-		{
-			this->outputFolder += '\\';
-		}
+		utility::appendSlash(this->outputFolder);
 	}
 
 	void BuildCommand::run() const
@@ -66,6 +63,16 @@ namespace commands
 		filesystem::create_directories(outputFolder);
 
 		system(format(R"(cd "{}" && call "{}" && {})"sv, intermediateFolder.string(), pathToBuildTools.string(), build).data());
+
+		if (global::outputFolder.size() && global::outputFolder != outputFolder)
+		{
+			if (!filesystem::exists(global::outputFolder))
+			{
+				filesystem::create_directories(global::outputFolder);
+			}
+
+			filesystem::copy(outputFolder + "Localization.dll", global::outputFolder);
+		}
 
 		if (updateHash)
 		{
