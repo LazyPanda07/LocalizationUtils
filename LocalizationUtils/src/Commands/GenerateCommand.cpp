@@ -149,6 +149,11 @@ namespace commands
 		}
 		else
 		{
+			if (!filesystem::exists(localizationFolder / files::metaFile))
+			{
+				this->start(localizationFolder, originalLanguage, otherLanguages);
+			}
+
 			this->repeat(localizationFolder, originalLanguage, otherLanguages);
 		}
 	}
