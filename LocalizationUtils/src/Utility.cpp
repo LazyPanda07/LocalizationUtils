@@ -15,7 +15,10 @@ namespace utility
 	{
 		filesystem::path fileName = pathToLocalizationFolder / format(global::localizationFile, language);
 
-		ofstream(fileName) << localizationData;
+		if (!filesystem::exists(fileName))
+		{
+			ofstream(fileName) << localizationData;
+		}
 
 		return fileName;
 	}
