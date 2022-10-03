@@ -12,6 +12,11 @@ int main(int argc, char** argv)
 {
 	if (argc <= 2)
 	{
+		if (argc == 2 && (argv[1] == commands_names::debug_build_command || argv[1] == commands_names::release_build_command))
+		{
+			goto start;
+		}
+
 		cout << "No commands provided" << endl;
 
 		system("pause");
@@ -23,6 +28,7 @@ int main(int argc, char** argv)
 		global::outputFolder = argv[3];
 	}
 
+start:
 	global::startFolder = argv[1];
 
 	if (!filesystem::exists(global::startFolder))
