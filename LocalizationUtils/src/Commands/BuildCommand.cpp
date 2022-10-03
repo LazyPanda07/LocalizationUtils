@@ -10,7 +10,7 @@ namespace commands
 {
 	void BuildCommand::copyDLL() const
 	{
-		if (global::outputFolder == outputFolder)
+		if (global::outputFolder == outputFolder || global::outputFolder.empty())
 		{
 			return;
 		}
