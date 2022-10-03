@@ -54,7 +54,7 @@ namespace utility
 		}
 
 		json::JSONBuilder settingsFile(utility::codepage);
-		vector<json::utility::objectSmartPointer<json::utility::jsonObject>> otherLanguages;
+		vector<json::utility::jsonObject> otherLanguages;
 
 		settingsFile[settings::originalLanguageSetting] = "en"s;
 		settingsFile[settings::otherLanguagesSetting] = move(otherLanguages);

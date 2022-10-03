@@ -49,7 +49,7 @@ namespace commands
 		{
 			string pathToOriginalLanguageLocalizationFile = (localizationFolder / global::localizationFile).string();
 
-			localizationKeys.setJSONData((ostringstream() << ifstream(format(pathToOriginalLanguageLocalizationFile, originalLanguage)).rdbuf()).str());
+			localizationKeys.setJSONData((ostringstream() << ifstream(vformat(pathToOriginalLanguageLocalizationFile, make_format_args(originalLanguage))).rdbuf()).str());
 		}
 
 		localizationFiles.erase(originalLanguage);

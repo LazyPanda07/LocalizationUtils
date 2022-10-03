@@ -22,13 +22,13 @@ namespace commands
 
 		filesystem::copy
 		(
-			utility::makePath(outputFolder, "Localization.dll"),
-			utility::makePath(global::outputFolder, "Localization.dll"),
+			utility::makePath(outputFolder, string(settings.getString("fileName")).append(".dll")),
+			utility::makePath(global::outputFolder, string(settings.getString("fileName")).append(".dll")),
 			filesystem::copy_options::overwrite_existing
 		);
 	}
 
-	BuildCommand::BuildCommand(const json::JSONParser& settings, const string_view* buildCommand, const string& outputFolder) :
+	BuildCommand::BuildCommand(const json::JSONParser& settings, const string_view& buildCommand, const string& outputFolder) :
 		ICommand(settings),
 		buildCommand(buildCommand),
 		outputFolder(outputFolder)
@@ -79,14 +79,14 @@ namespace commands
 			generator.generate();
 		}
 
-		if (filesystem::exists(utility::makePath(outputFolder, "Localization.dll")) && !updateHash)
+		if (filesystem::exists(utility::makePath(outputFolder, string(settings.getString("fileName")).append(".dll"))) && !updateHash)
 		{
 			this->copyDLL();
 
 			return;
 		}
 
-		string build = format(*buildCommand, outputFolder);
+		string build = vformat(buildCommand, make_format_args(outputFolder));
 
 		filesystem::create_directories(outputFolder);
 
