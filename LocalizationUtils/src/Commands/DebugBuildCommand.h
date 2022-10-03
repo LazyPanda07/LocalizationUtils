@@ -7,7 +7,7 @@ namespace commands
 	class DebugBuildCommand : public BuildCommand
 	{
 	private:
-		static constexpr std::string_view command = R"(cl /O2 /GL /LDd /std:c++20 /utf-8 /MTd *.cpp /link /OUT:"{outputFolder}{fileName}.dll" /IMPLIB:{fileName}.lib)";
+		static constexpr std::string_view command = R"(cl /O2 /GL /LDd /std:c++20 /utf-8 /MTd *.cpp /link /OUT:"{0}{1}.dll" /IMPLIB:{1}.lib)";
 
 	public:
 		DebugBuildCommand(const json::JSONParser& settings);

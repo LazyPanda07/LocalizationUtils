@@ -86,7 +86,7 @@ namespace commands
 			return;
 		}
 
-		string build = vformat(buildCommand, make_format_args(outputFolder));
+		string build = vformat(buildCommand, make_format_args(outputFolder, settings.getString("fileName")));
 
 		filesystem::create_directories(outputFolder);
 

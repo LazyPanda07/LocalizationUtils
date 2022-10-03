@@ -38,6 +38,7 @@ namespace settings
 	inline const std::string pathToVisualStudioSetting = "pathToVisualStudio";
 	inline const std::string debugOutputFolderSetting = "debugOutputFolder";
 	inline const std::string releaseOutputFolderSetting = "releaseOutputFolder";
+	inline const std::string fileNameSetting = "fileName";
 }
 
 namespace folders
