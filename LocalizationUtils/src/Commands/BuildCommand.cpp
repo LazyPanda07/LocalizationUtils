@@ -1,6 +1,7 @@
 #include "BuildCommand.h"
 
 #include "LocalizationSourceFileGenerator.h"
+#include "ReleaseBuildCommand.h"
 
 #pragma warning(disable: 4305)
 
@@ -8,30 +9,10 @@ using namespace std;
 
 namespace commands
 {
-	void BuildCommand::copyDLL() const
-	{
-		if (global::outputFolder == outputFolder || global::outputFolder.empty())
-		{
-			return;
-		}
-
-		if (!filesystem::exists(global::outputFolder))
-		{
-			filesystem::create_directories(global::outputFolder);
-		}
-
-		filesystem::copy
-		(
-			utility::makePath(outputFolder, string(settings.getString("fileName")).append(".dll")),
-			utility::makePath(global::outputFolder, string(settings.getString("fileName")).append(".dll")),
-			filesystem::copy_options::overwrite_existing
-		);
-	}
-
 	BuildCommand::BuildCommand(const json::JSONParser& settings, const string_view& buildCommand, const string& outputFolder) :
 		ICommand(settings),
 		buildCommand(buildCommand),
-		outputFolder(outputFolder)
+		outputFolder(global::outputFolder.empty() ? outputFolder : global::outputFolder)
 	{
 		utility::appendSlash(this->outputFolder);
 	}
@@ -40,10 +21,12 @@ namespace commands
 	{
 		filesystem::path pathToBuildTools = utility::makePath(settings.getString(settings::pathToVisualStudioSetting), build::pathTox64Tools);
 		filesystem::path intermediateFolder = utility::makePath(global::startFolder, folders::intermediateFolder);
+		filesystem::path pathToBinariesFolder = utility::makePath(global::startFolder, folders::binariesFolder, (dynamic_cast<const ReleaseBuildCommand*>(this) ? folders::releaseBinariesFolder : folders::debugBinariesFolder));
 		filesystem::path pathToMetaFile = utility::makePath(global::startFolder, folders::localizationFolder, files::metaFile);
+		string fileName = settings.getString("fileName") + ".dll";
 		json::JSONParser metaParser = ifstream(pathToMetaFile);
 		string newBuildHash;
-		bool updateHash = false;
+		bool isHashUpdated = false;
 
 		if (!filesystem::exists(pathToBuildTools))
 		{
@@ -68,36 +51,42 @@ namespace commands
 		}
 
 		newBuildHash = newHash.getHash();
-		updateHash =
+		isHashUpdated =
 			!metaParser.contains(utility::buildHashUtilitySetting, json::utility::variantTypeEnum::jString) ||
 			newBuildHash != metaParser.getString(utility::buildHashUtilitySetting);
 
-		if (!filesystem::exists(intermediateFolder / files::generatedCPPFile) || updateHash)
+		if (!filesystem::exists(intermediateFolder / files::generatedCPPFile) || isHashUpdated)
 		{
-			LocalizationSourceFileGenerator generator(settings);
-
-			generator.generate();
+			LocalizationSourceFileGenerator(settings).generate();
 		}
 
-		if (filesystem::exists(utility::makePath(outputFolder, string(settings.getString("fileName")).append(".dll"))) && !updateHash)
-		{
-			this->copyDLL();
+		filesystem::create_directories(pathToBinariesFolder);
 
-			return;
+		if (isHashUpdated || !filesystem::exists(pathToBinariesFolder / fileName))
+		{
+			string build = vformat(buildCommand, make_format_args(pathToBinariesFolder.string() + '\\', settings.getString("fileName")));
+
+			cout << pathToBinariesFolder << endl;
+
+			system(format(R"(cd "{}" && call "{}" && {})"sv, intermediateFolder.string(), pathToBuildTools.string(), build).data());
 		}
 
-		string build = vformat(buildCommand, make_format_args(outputFolder, settings.getString("fileName")));
-
-		filesystem::create_directories(outputFolder);
-
-		system(format(R"(cd "{}" && call "{}" && {})"sv, intermediateFolder.string(), pathToBuildTools.string(), build).data());
-
-		if (global::outputFolder.size() && global::outputFolder != outputFolder)
+		if (outputFolder.size())
 		{
-			this->copyDLL();
+			filesystem::create_directories(outputFolder);
+
+			if (isHashUpdated || !filesystem::exists(utility::makePath(outputFolder, fileName)))
+			{
+				filesystem::copy
+				(
+					pathToBinariesFolder / fileName,
+					utility::makePath(outputFolder, fileName),
+					filesystem::copy_options::overwrite_existing
+				);
+			}
 		}
 
-		if (updateHash)
+		if (isHashUpdated)
 		{
 			json::JSONBuilder updateBuilder(metaParser.getParsedData(), CP_UTF8);
 

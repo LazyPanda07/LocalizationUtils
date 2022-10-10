@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 		global::outputFolder = argv[3];
 	}
 
-	global::startFolder = argv[1];
+	global::startFolder = filesystem::absolute(argv[1]).string();
 
 	if (!filesystem::exists(global::startFolder))
 	{

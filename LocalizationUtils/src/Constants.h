@@ -44,7 +44,11 @@ namespace settings
 namespace folders
 {
 	inline constexpr std::string_view intermediateFolder = "intermediate";
+	inline constexpr std::string_view binariesFolder = "binaries";
 	inline constexpr std::string_view localizationFolder = "localization";
+
+	inline constexpr std::string_view debugBinariesFolder = "debug";
+	inline constexpr std::string_view releaseBinariesFolder = "release";
 }
 
 namespace commands_names

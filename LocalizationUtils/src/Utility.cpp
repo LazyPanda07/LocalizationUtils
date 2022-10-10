@@ -46,11 +46,11 @@ namespace utility
 
 	filesystem::path generateSettingsFile()
 	{
-		filesystem::path pathToSettinsFile = utility::makePath(global::startFolder, global::settingsFile);
+		filesystem::path pathToSettingsFile = utility::makePath(global::startFolder, global::settingsFile);
 
-		if (filesystem::exists(pathToSettinsFile))
+		if (filesystem::exists(pathToSettingsFile))
 		{
-			return pathToSettinsFile;
+			return pathToSettingsFile;
 		}
 
 		json::JSONBuilder settingsFile(utility::codepage);
@@ -61,11 +61,11 @@ namespace utility
 		settingsFile.appendString(settings::pathToVisualStudioSetting, R"(C:\\Program Files\\Microsoft Visual Studio\\2022\\Community)");
 		settingsFile[settings::debugOutputFolderSetting] = ""s;
 		settingsFile[settings::releaseOutputFolderSetting] = ""s;
-		settingsFile[settings::fileNameSetting] = "Localization";
+		settingsFile[settings::fileNameSetting] = "LocalizationData";
 
-		ofstream(pathToSettinsFile) << settingsFile;
+		ofstream(pathToSettingsFile) << settingsFile;
 
-		return pathToSettinsFile;
+		return pathToSettingsFile;
 	}
 
 	void appendSlash(string& source)

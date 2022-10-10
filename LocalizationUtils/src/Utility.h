@@ -24,8 +24,17 @@ namespace utility
 	{
 		if constexpr (sizeof...(args))
 		{
-			std::string tem(part);
+			std::string tem;
 
+			if constexpr (std::is_same_v<std::filesystem::path, std::remove_cvref_t<T>>)
+			{
+				tem = part.string();
+			}
+			else
+			{
+				tem = part;
+			}
+			
 			if (tem.back() == '\\' || tem.back() == '/')
 			{
 				return std::move(tem) + makePath(std::forward<Args>(args)...);
@@ -37,6 +46,11 @@ namespace utility
 		}
 		else
 		{
+			if constexpr (std::is_same_v<std::filesystem::path, std::remove_cvref_t<T>>)
+			{
+				return part.string();
+			}
+
 			return std::string(part);
 		}
 	}
