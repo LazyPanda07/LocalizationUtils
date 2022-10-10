@@ -66,8 +66,6 @@ namespace commands
 		{
 			string build = vformat(buildCommand, make_format_args(pathToBinariesFolder.string() + '\\', settings.getString("fileName")));
 
-			cout << pathToBinariesFolder << endl;
-
 			system(format(R"(cd "{}" && call "{}" && {})"sv, intermediateFolder.string(), pathToBuildTools.string(), build).data());
 		}
 

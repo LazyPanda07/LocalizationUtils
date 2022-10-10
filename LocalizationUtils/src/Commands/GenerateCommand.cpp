@@ -12,24 +12,43 @@ namespace commands
 
 		metaBuilder[originalLanguage] = encoding::SHA256::getHash((ostringstream() << ifstream(utility::makeLocalizationFile(originalLanguage, localizationFolder)).rdbuf()).str());
 
-		for (const auto& i : otherLanguages)
+		for (const string& otherLanguage : otherLanguages)
 		{
-			metaBuilder[i] = encoding::SHA256::getHash((ostringstream() << ifstream(utility::makeLocalizationFile(i, localizationFolder)).rdbuf()).str());
+			metaBuilder[otherLanguage] = encoding::SHA256::getHash((ostringstream() << ifstream(utility::makeLocalizationFile(otherLanguage, localizationFolder)).rdbuf()).str());
 		}
 
 		ofstream(localizationFolder / files::metaFile) << metaBuilder;
 	}
 
+	json::utility::jsonObject GenerateCommand::updateOtherLanguages(const filesystem::path& localizationFolder, const vector<string>& otherLanguages) const
+	{
+		json::utility::jsonObject result;
+		json::JSONBuilder metaBuilder(json::JSONParser(ifstream(localizationFolder / files::metaFile)).getParsedData(), CP_UTF8);
+
+		for (const string& otherLanguage : otherLanguages)
+		{
+			if (!metaBuilder.contains(otherLanguage, json::utility::variantTypeEnum::jString))
+			{
+				metaBuilder[otherLanguage] = encoding::SHA256::getHash((ostringstream() << ifstream(utility::makeLocalizationFile(otherLanguage, localizationFolder)).rdbuf()).str());
+			}
+		}
+
+		ofstream(localizationFolder / files::metaFile) << metaBuilder;
+
+		metaBuilder.getObject(result);
+
+		return result;
+	}
+
 	void GenerateCommand::repeat(const filesystem::path& localizationFolder, const string& originalLanguage, const vector<string>& otherLanguages) const
 	{
-		filesystem::directory_iterator it(localizationFolder);
 		unordered_map<string, string> localizationFiles;
 		json::JSONParser localizationKeys;
-		json::JSONParser metaParser = ifstream(localizationFolder / files::metaFile);
+		json::JSONParser metaParser(this->updateOtherLanguages(localizationFolder, otherLanguages));
 
-		for (const auto& i : it)
+		for (const auto& it : filesystem::directory_iterator(localizationFolder))
 		{
-			string fileName = i.path().string();
+			string fileName = it.path().string();
 
 			if (fileName.find(files::metaFile) != string::npos)
 			{
@@ -56,11 +75,11 @@ namespace commands
 
 		if (otherLanguages.size() != localizationFiles.size())
 		{
-			for (const auto& i : otherLanguages)
+			for (const string& otherLanguage : otherLanguages)
 			{
-				if (localizationFiles.find(i) == localizationFiles.end())
+				if (localizationFiles.find(otherLanguage) == localizationFiles.end())
 				{
-					utility::makeLocalizationFile(i, localizationFolder, utility::copyOriginalLanguage(localizationKeys));
+					utility::makeLocalizationFile(otherLanguage, localizationFolder, utility::copyOriginalLanguage(localizationKeys));
 				}
 			}
 		}
@@ -79,11 +98,10 @@ namespace commands
 		{
 			updateMetaBuilder[originalLanguage] = currentHash.getHash();
 
-			for (const auto& i : otherLanguages)
+			for (const string& otherLanguage : otherLanguages)
 			{
-				const string& pathToCurrentFile = localizationFiles[i];
+				const string& pathToCurrentFile = localizationFiles[otherLanguage];
 				json::JSONParser languageParser = ifstream(pathToCurrentFile);
-
 				unordered_set<string> existingKeys;
 				unordered_map<const string*, const string*> values;
 
@@ -105,7 +123,7 @@ namespace commands
 				}
 
 				ofstream(pathToCurrentFile) << updateBuilder;
-				updatedHashes[i] = encoding::SHA256::getHash((ostringstream() << ifstream(pathToCurrentFile).rdbuf()).str());
+				updatedHashes[otherLanguage] = encoding::SHA256::getHash((ostringstream() << ifstream(pathToCurrentFile).rdbuf()).str());
 			}
 		}
 		else
