@@ -40,14 +40,14 @@ namespace commands
 
 		encoding::SHA256 newHash;
 
-		for (const auto& i : metaParser)
+		for (const auto& [key, value] : metaParser)
 		{
-			if (i->first == utility::buildHashUtilitySetting)
+			if (key == utility::buildHashUtilitySetting)
 			{
 				continue;
 			}
 
-			newHash.update(get<string>(i->second));
+			newHash.update(get<string>(value));
 		}
 
 		newBuildHash = newHash.getHash();

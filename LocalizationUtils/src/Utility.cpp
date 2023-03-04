@@ -28,11 +28,11 @@ namespace utility
 		json::JSONBuilder result(CP_UTF8);
 		unordered_set<string>::const_iterator endIterator = existingKeys.end();
 
-		for (const auto& i : originalLanguageKeys)
+		for (const auto& [key, value] : originalLanguageKeys)
 		{
-			if (existingKeys.find(i->first) == endIterator)
+			if (existingKeys.find(key) == endIterator)
 			{
-				result[i->first] = ""s;
+				result[key] = ""s;
 			}
 		}
 

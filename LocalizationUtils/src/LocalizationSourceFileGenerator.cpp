@@ -5,6 +5,7 @@ using namespace std;
 void LocalizationSourceFileGenerator::appendCore(ofstream& cppFile, const string& originalLanguage) const
 {
 	cppFile << utility::convertToUTF8(format(R"(#include <unordered_map>
+#include <string>
 
 using namespace std;
 
@@ -27,12 +28,9 @@ bool LocalizationSourceFileGenerator::appendLanguage(ofstream& cppFile, const js
 {}
 )"sv, language, '{'));
 
-	for (const auto& i : dictionary)
+	for (const auto& [key, value] : dictionary)
 	{
-		const string& key = i->first;
-		const string& value = get<string>(i->second);
-
-		result += convertToUTF8("\t{ \"") + key + convertToUTF8("\", \"") + value + convertToUTF8("\" },\n");
+		result += convertToUTF8("\t{ \"") + key + convertToUTF8("\", \"") + get<string>(value) + convertToUTF8("\" },\n");
 	}
 
 	result.pop_back();

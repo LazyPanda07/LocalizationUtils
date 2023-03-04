@@ -89,9 +89,9 @@ namespace commands
 		unordered_map<string, string> updatedHashes;
 		json::JSONBuilder updateMetaBuilder(metaParser.getParsedData(), CP_UTF8);
 
-		for (const auto& i : localizationKeys)
+		for (const auto& [key, value] : localizationKeys)
 		{
-			currentHash.update(i->first);
+			currentHash.update(key);
 		}
 
 		if (currentHash.getHash() != previousHash)
@@ -108,11 +108,11 @@ namespace commands
 				existingKeys.reserve(languageParser.getParsedData().data.size());
 				values.reserve(languageParser.getParsedData().data.size());
 
-				for (const auto& j : languageParser)
+				for (const auto& [keyLanguage, valueLanguage] : languageParser)
 				{
-					const string& key = *existingKeys.insert(j->first).first;
+					const string& key = *existingKeys.insert(keyLanguage).first;
 
-					values[&key] = &get<string>(j->second);
+					values[&key] = &get<string>(valueLanguage);
 				}
 
 				json::JSONBuilder updateBuilder = utility::copyOriginalLanguage(localizationKeys, existingKeys);
