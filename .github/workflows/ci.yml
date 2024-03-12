@@ -62,8 +62,6 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
-      with:
-        submodules: recursive
 
     - name: Download artifacts
       uses: actions/download-artifact@v4
@@ -71,9 +69,6 @@ jobs:
         path: Windows
         name: Windows
         
-    - name: Enable NMake
-      uses: ilammy/msvc-dev-cmd@v1.13.0
-      
     - name: Tests
       working-directory: Tests
       run: |
@@ -86,8 +81,6 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
-      with:
-        submodules: recursive
 
     - name: Download artifacts
       uses: actions/download-artifact@v4
@@ -98,6 +91,7 @@ jobs:
     - name: Tests
       working-directory: Tests
       run: |
+          chmod +x ../Linux/LocalizationUtils
           python3 tests.py
 
   
