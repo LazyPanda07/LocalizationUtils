@@ -11,6 +11,13 @@ using namespace std;
 
 namespace utility
 {
+	string getLocalizationUtilsVersion()
+	{
+		string version = "1.0.0";
+
+		return version;
+	}
+
 	filesystem::path makeLocalizationFile(const string& language, const filesystem::path& pathToLocalizationFolder, const json::JSONBuilder& localizationData)
 	{
 		filesystem::path fileName = pathToLocalizationFolder / format(global::localizationFile, language);
@@ -41,7 +48,7 @@ namespace utility
 
 	string convertToUTF8(const string& text)
 	{
-		return json::utility::toUTF8JSON(text, codepage);
+		return json::utility::toUTF8JSON(text, CP_WINDOWS_1251);
 	}
 
 	filesystem::path generateSettingsFile()
@@ -53,7 +60,7 @@ namespace utility
 			return pathToSettingsFile;
 		}
 
-		json::JSONBuilder settingsFile(utility::codepage);
+		json::JSONBuilder settingsFile(CP_WINDOWS_1251);
 		vector<json::utility::jsonObject> otherLanguages;
 
 		settingsFile[settings::originalLanguageSetting] = "en"s;

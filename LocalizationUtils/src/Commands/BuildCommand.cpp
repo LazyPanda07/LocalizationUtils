@@ -9,7 +9,7 @@ using namespace std;
 
 namespace commands
 {
-	BuildCommand::BuildCommand(const json::JSONParser& settings, const string_view& buildCommand, const string& outputFolder) :
+	BuildCommand::BuildCommand(const json::JSONParser& settings, string_view buildCommand, const string& outputFolder) :
 		ICommand(settings),
 		buildCommand(buildCommand),
 		outputFolder(global::outputFolder.empty() ? outputFolder : global::outputFolder)
@@ -66,7 +66,12 @@ namespace commands
 		{
 			string build = vformat(buildCommand, make_format_args(pathToBinariesFolder.string() + '\\', settings.getString("fileName")));
 
-			system(format(R"(cd "{}" && call "{}" && {})"sv, intermediateFolder.string(), pathToBuildTools.string(), build).data());
+			if (system(format(R"(cd "{}" && call "{}" && {})"sv, intermediateFolder.string(), pathToBuildTools.string(), build).data()))
+			{
+				cerr << "Command error" << endl;
+
+				exit(1);
+			}
 		}
 
 		if (outputFolder.size())

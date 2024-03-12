@@ -11,8 +11,10 @@
 #include "Runner.h"
 #include "Validator.h"
 
+#ifndef __LINUX__
 #pragma comment(lib, "JSON.lib")
 #pragma comment(lib, "SHA256.lib")
+#endif // !__LINUX__
 
 using namespace std;
 
@@ -21,8 +23,6 @@ int main(int argc, char** argv)
 	if (argc <= 2)
 	{
 		cout << "No commands provided" << endl;
-
-		system("pause");
 
 		return -1;
 	}
@@ -50,8 +50,6 @@ int main(int argc, char** argv)
 		{
 			cout << i << endl;
 		}
-
-		system("pause");
 
 		return -2;
 	}

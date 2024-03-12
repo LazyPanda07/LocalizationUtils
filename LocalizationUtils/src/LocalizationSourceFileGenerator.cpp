@@ -9,7 +9,11 @@ void LocalizationSourceFileGenerator::appendCore(ofstream& cppFile, const string
 
 using namespace std;
 
+#ifdef __LINUX__
+#define LOCALIZATION_API extern "C" __attribute__((visibility("default")))
+#else
 #define LOCALIZATION_API extern "C" __declspec(dllexport)
+#endif
 
 LOCALIZATION_API const string originalLanguage = "{}";
 )"sv, originalLanguage));
