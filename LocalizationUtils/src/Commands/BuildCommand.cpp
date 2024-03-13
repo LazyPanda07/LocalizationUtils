@@ -64,6 +64,11 @@ namespace commands
 
 		if (isHashUpdated || !filesystem::exists(pathToBinariesFolder / fileName))
 		{
+			if (filesystem::exists(intermediateFolder / "build"))
+			{
+				filesystem::remove(intermediateFolder / "build");
+			}
+
 			string build = format("cmake -DCMAKE_BUILD_TYPE={} {} ..", buildType, cmakeGenerator.getGenerator());
 
 			if (system(format(R"(cd "{}" && mkdir build && cd build && {} && {} install)"sv, intermediateFolder.string(), build, cmakeGenerator.getMake()).data()))
