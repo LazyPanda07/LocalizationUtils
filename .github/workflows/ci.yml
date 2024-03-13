@@ -117,27 +117,12 @@ jobs:
       
     - name: Create Windows zip
       if: ${{ env.CURRENT_BRANCH == 'master' }}
-      run: |
-          cd Windows
-          mv localization_utils_settings.json ../
-          mv LocalizationUtils.exe ../
-          rm -rf *
-          mv ../localization_utils_settings.json .
-          mv ../LocalizationUtils.exe .
-          cd ..
-          zip -r windows.zip Windows
+      run: zip windows.zip Windows/localization_utils_settings.json Windows/LocalizationUtils.exe
+          
 
     - name: Create Linux zip
       if: ${{ env.CURRENT_BRANCH == 'master' }}
-      run: |
-          cd Linux
-          mv localization_utils_settings.json ../
-          mv LocalizationUtils ../
-          rm -rf *
-          mv ../localization_utils_settings.json .
-          mv ../LocalizationUtils .
-          cd ..
-          zip -r linux.zip Linux
+      run: zip linux.zip Linux/localization_utils_settings.json Linux/LocalizationUtils
 
     - name: Publish Windows
       if: ${{ env.CURRENT_BRANCH == 'master' }}
