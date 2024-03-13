@@ -124,6 +124,7 @@ jobs:
           rm -rf *
           mv ../localization_utils_settings.json .
           mv ../LocalizationUtils.exe .
+          cd ..
           zip -r windows.zip Windows
 
     - name: Create Linux zip
@@ -135,6 +136,7 @@ jobs:
           rm -rf *
           mv ../localization_utils_settings.json .
           mv ../LocalizationUtils .
+          cd ..
           zip -r linux.zip Linux
 
     - name: Publish Windows
