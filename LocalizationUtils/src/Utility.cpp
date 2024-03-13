@@ -78,7 +78,16 @@ namespace utility
 	{
 		if (source.size() && (source.back() != '/' && source.back() != '\\'))
 		{
-			source += '\\';
+			source += getSeparator();
 		}
+	}
+
+	char getSeparator()
+	{
+#ifdef __LINUX__
+		return '/';
+#else
+		return '\\';
+#endif
 	}
 }

@@ -21,6 +21,8 @@ namespace utility
 
 	void appendSlash(std::string& source);
 
+	char getSeparator();
+
 	template<typename T, typename... Args>
 	std::string makePath(T&& part, Args&&... args)
 	{
@@ -43,7 +45,7 @@ namespace utility
 			}
 			else
 			{
-				return std::move(tem) + '\\' + makePath(std::forward<Args>(args)...);
+				return std::move(tem) + getSeparator() + makePath(std::forward<Args>(args)...);
 			}
 		}
 		else
