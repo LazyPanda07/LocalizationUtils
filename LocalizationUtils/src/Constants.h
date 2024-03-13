@@ -12,11 +12,6 @@ namespace global
 	inline std::string settingsFile = "localization_utils_settings.json";
 }
 
-namespace build
-{
-	inline constexpr std::string_view pathTox64Tools = "VC\\Auxiliary\\Build\\vcvars64.bat";
-}
-
 namespace utility
 {
 	inline const std::string buildHashUtilitySetting = "buildHash";
@@ -33,7 +28,6 @@ namespace settings
 {
 	inline const std::string originalLanguageSetting = "originalLanguage";
 	inline const std::string otherLanguagesSetting = "otherLanguages";
-	inline const std::string pathToVisualStudioSetting = "pathToVisualStudio";
 	inline const std::string debugOutputFolderSetting = "debugOutputFolder";
 	inline const std::string releaseOutputFolderSetting = "releaseOutputFolder";
 	inline const std::string fileNameSetting = "fileName";

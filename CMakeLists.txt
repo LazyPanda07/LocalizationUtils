@@ -12,6 +12,7 @@ project(LocalizationUtils)
 add_executable(
 	${PROJECT_NAME}
 	LocalizationUtils/src/LocalizationSourceFileGenerator.cpp
+	LocalizationUtils/src/CMakeFileGenerator.cpp
 	LocalizationUtils/src/Main.cpp
 	LocalizationUtils/src/Runner.cpp
 	LocalizationUtils/src/Utility.cpp

@@ -2,6 +2,7 @@
 
 #include "LocalizationSourceFileGenerator.h"
 #include "ReleaseBuildCommand.h"
+#include "CMakeFileGenerator.h"
 
 #pragma warning(disable: 4305)
 
@@ -9,9 +10,8 @@ using namespace std;
 
 namespace commands
 {
-	BuildCommand::BuildCommand(const json::JSONParser& settings, string_view buildCommand, const string& outputFolder) :
+	BuildCommand::BuildCommand(const json::JSONParser& settings, const string& outputFolder) :
 		ICommand(settings),
-		buildCommand(buildCommand),
 		outputFolder(global::outputFolder.empty() ? outputFolder : global::outputFolder)
 	{
 		utility::appendSlash(this->outputFolder);
@@ -19,19 +19,17 @@ namespace commands
 
 	void BuildCommand::run() const
 	{
-		filesystem::path pathToBuildTools = utility::makePath(settings.getString(settings::pathToVisualStudioSetting), build::pathTox64Tools);
 		filesystem::path intermediateFolder = utility::makePath(global::startFolder, folders::intermediateFolder);
 		filesystem::path pathToBinariesFolder = utility::makePath(global::startFolder, folders::binariesFolder, (dynamic_cast<const ReleaseBuildCommand*>(this) ? folders::releaseBinariesFolder : folders::debugBinariesFolder));
 		filesystem::path pathToMetaFile = utility::makePath(global::startFolder, folders::localizationFolder, files::metaFile);
-		string fileName = settings.getString("fileName") + ".dll";
+		CMakeFileGenerator cmakeGenerator(settings);
+		string fileName = cmakeGenerator.getResultName();
 		json::JSONParser metaParser = ifstream(pathToMetaFile);
 		string newBuildHash;
 		bool isHashUpdated = false;
-
-		if (!filesystem::exists(pathToBuildTools))
-		{
-			throw runtime_error(format(R"(Can't find "{}" file)"sv, pathToBuildTools.string()));
-		}
+		string_view buildType = dynamic_cast<const ReleaseBuildCommand*>(this) ?
+			"Release" :
+			"Debug";
 
 		if (!filesystem::exists(intermediateFolder))
 		{
@@ -55,18 +53,20 @@ namespace commands
 			!metaParser.contains(utility::buildHashUtilitySetting, json::utility::variantTypeEnum::jString) ||
 			newBuildHash != metaParser.getString(utility::buildHashUtilitySetting);
 
+		filesystem::create_directories(pathToBinariesFolder);
+
 		if (!filesystem::exists(intermediateFolder / files::generatedCPPFile) || isHashUpdated)
 		{
 			LocalizationSourceFileGenerator(settings).generate();
-		}
 
-		filesystem::create_directories(pathToBinariesFolder);
+			cmakeGenerator.generate(intermediateFolder, pathToBinariesFolder);
+		}
 
 		if (isHashUpdated || !filesystem::exists(pathToBinariesFolder / fileName))
 		{
-			string build = vformat(buildCommand, make_format_args(pathToBinariesFolder.string() + '\\', settings.getString("fileName")));
+			string build = format("cmake -DCMAKE_BUILD_TYPE={} {} ..", buildType, cmakeGenerator.getGenerator());
 
-			if (system(format(R"(cd "{}" && call "{}" && {})"sv, intermediateFolder.string(), pathToBuildTools.string(), build).data()))
+			if (system(format(R"(cd "{}" && mkdir build && cd build && {} && {} install)"sv, intermediateFolder.string(), build, cmakeGenerator.getMake()).data()))
 			{
 				cerr << "Command error" << endl;
 

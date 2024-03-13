@@ -31,7 +31,5 @@ vector<string> Validator::validate() const
 		this->checkError(settings::releaseOutputFolderSetting, errors);
 	}
 
-	this->checkError(settings::pathToVisualStudioSetting, errors);
-
 	return errors;
 }

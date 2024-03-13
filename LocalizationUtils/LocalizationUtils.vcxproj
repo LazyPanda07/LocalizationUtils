@@ -102,6 +102,7 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CMakeFileGenerator.cpp" />
     <ClCompile Include="src\Commands\BuildCommand.cpp" />
     <ClCompile Include="src\Commands\DebugBuildCommand.cpp" />
     <ClCompile Include="src\Commands\GenerateCommand.cpp" />
@@ -125,6 +126,7 @@
     <None Include="localization_utils_settings.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\CMakeFileGenerator.h" />
     <ClInclude Include="src\Commands\BuildCommand.h" />
     <ClInclude Include="src\Commands\DebugBuildCommand.h" />
     <ClInclude Include="src\Commands\GenerateCommand.h" />

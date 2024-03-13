@@ -65,7 +65,6 @@ namespace utility
 
 		settingsFile[settings::originalLanguageSetting] = "en"s;
 		settingsFile[settings::otherLanguagesSetting] = move(otherLanguages);
-		settingsFile.appendString(settings::pathToVisualStudioSetting, R"(C:\Program Files\Microsoft Visual Studio\2022\Community)");
 		settingsFile[settings::debugOutputFolderSetting] = ""s;
 		settingsFile[settings::releaseOutputFolderSetting] = ""s;
 		settingsFile[settings::fileNameSetting] = "LocalizationData";
