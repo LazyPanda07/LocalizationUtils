@@ -129,11 +129,11 @@ jobs:
       uses: svenstaro/upload-release-action@master
       with:
         tag: v${{ env.VERSION }}
-        file: Windows
+        file: windows.zip
 
     - name: Publish Linux
       if: ${{ env.CURRENT_BRANCH == 'master' }}
       uses: svenstaro/upload-release-action@master
       with:
         tag: v${{ env.VERSION }}
-        file: Linux
+        file: linux.zip
