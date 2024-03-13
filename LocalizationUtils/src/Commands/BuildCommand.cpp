@@ -58,15 +58,15 @@ namespace commands
 		if (!filesystem::exists(intermediateFolder / files::generatedCPPFile) || isHashUpdated)
 		{
 			LocalizationSourceFileGenerator(settings).generate();
-
-			cmakeGenerator.generate(intermediateFolder, pathToBinariesFolder);
 		}
+
+		cmakeGenerator.generate(intermediateFolder, pathToBinariesFolder);
 
 		if (isHashUpdated || !filesystem::exists(pathToBinariesFolder / fileName))
 		{
 			if (filesystem::exists(intermediateFolder / "build"))
 			{
-				filesystem::remove(intermediateFolder / "build");
+				filesystem::remove_all(intermediateFolder / "build");
 			}
 
 			string build = format("cmake -DCMAKE_BUILD_TYPE={} {} ..", buildType, cmakeGenerator.getGenerator());
