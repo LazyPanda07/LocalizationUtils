@@ -1,5 +1,7 @@
 #include "CMakeFileGenerator.h"
 
+#include <algorithm>
+
 using namespace std;
 
 CMakeFileGenerator::CMakeFileGenerator(const json::JSONParser& settings) :
