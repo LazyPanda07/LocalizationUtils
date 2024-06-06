@@ -83,15 +83,12 @@ namespace commands
 		{
 			filesystem::create_directories(outputFolder);
 
-			if (isHashUpdated || !filesystem::exists(utility::makePath(outputFolder, fileName)))
-			{
-				filesystem::copy
-				(
-					pathToBinariesFolder / fileName,
-					utility::makePath(outputFolder, fileName),
-					filesystem::copy_options::overwrite_existing
-				);
-			}
+			filesystem::copy
+			(
+				pathToBinariesFolder / fileName,
+				utility::makePath(outputFolder, fileName),
+				filesystem::copy_options::overwrite_existing
+			);
 		}
 
 		if (isHashUpdated)

@@ -17,10 +17,10 @@ void CMakeFileGenerator::generate(const filesystem::path& pathToIntermediate, co
 
 	replace(binaryPath.begin(), binaryPath.end(), '\\', '/');
 
-	result << "cmake_minimum_required(VERSION 3.12.0)" << endl << endl;
+	result << "cmake_minimum_required(VERSION 3.27.0)" << endl << endl;
 
 	result << "set(CMAKE_CXX_STANDARD 20)" << endl;
-	result << format("set(INSTALL_PATH {})", binaryPath) << endl << endl;
+	result << format("set(CMAKE_INSTALL_PREFIX {} CACHE STRING "")", binaryPath) << endl << endl;
 
 	result << R"(if (UNIX)
 	add_definitions(-D__LINUX__)
@@ -30,7 +30,7 @@ endif (UNIX))" << endl << endl;
 
 	result << "add_library(${PROJECT_NAME} SHARED localization.cpp)" << endl << endl;
 
-	result << "install(TARGETS ${PROJECT_NAME} DESTINATION ${INSTALL_PATH})" << endl;
+	result << "install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX})" << endl;
 }
 
 string CMakeFileGenerator::getResultName() const
@@ -51,7 +51,6 @@ string CMakeFileGenerator::getGenerator() const
 #else
 	return R"(-G "NMake Makefiles")";
 #endif // __LINUX__
-
 }
 
 string CMakeFileGenerator::getMake() const
