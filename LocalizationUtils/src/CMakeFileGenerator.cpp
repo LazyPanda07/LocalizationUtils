@@ -20,7 +20,7 @@ void CMakeFileGenerator::generate(const filesystem::path& pathToIntermediate, co
 	result << "cmake_minimum_required(VERSION 3.27.0)" << endl << endl;
 
 	result << "set(CMAKE_CXX_STANDARD 20)" << endl;
-	result << format("set(CMAKE_INSTALL_PREFIX {} CACHE STRING "")", binaryPath) << endl << endl;
+	result << format(R"(set(CMAKE_INSTALL_PREFIX {} CACHE STRING ""))", binaryPath) << endl << endl;
 
 	result << R"(if (UNIX)
 	add_definitions(-D__LINUX__)
