@@ -92,7 +92,7 @@ void LocalizationSourceFileGenerator::appendCCFunctions(ostream& cppFile)
 		return nullptr;
 	}
 
-	return it->second->data();
+	return valueIt->second.data();
 }
 
 LOCALIZATION_API const char* getOriginalLanguage()
