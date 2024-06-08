@@ -78,7 +78,7 @@ void LocalizationSourceFileGenerator::appendCCFunctions(ostream& cppFile)
 {
 	auto it = dictionaries.find(language);
 
-	if (it == language.end())
+	if (it == dictionaries.end())
 	{
 		return nullptr;
 	}
@@ -92,7 +92,7 @@ void LocalizationSourceFileGenerator::appendCCFunctions(ostream& cppFile)
 		return nullptr;
 	}
 
-	return it->second.data();
+	return it->second->data();
 }
 
 LOCALIZATION_API const char* getOriginalLanguage()
