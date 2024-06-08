@@ -17,6 +17,11 @@ using namespace std;
 #endif
 
 constexpr string_view originalLanguage = "{}";
+
+constexpr string_view nullptrSizeError = "size must be valid address";
+constexpr string_view nullptrKeysError = "keys must be valid address";
+constexpr string_view nullptrValuesError = "values must be valid address";
+constexpr string_view noLanguageError = "Wrong language";
 )", originalLanguage));
 }
 
@@ -98,6 +103,91 @@ void LocalizationSourceFileGenerator::appendCCFunctions(ostream& cppFile)
 LOCALIZATION_API const char* getOriginalLanguage()
 {
 	return originalLanguage.data();
+}
+
+/**
+* @brief Application must call freeDictionariesLanguages to free resources
+*/
+LOCALIZATION_API const char** getDictionariesLanguages(uint64_t* size)
+{
+	if (!size)
+	{
+		return nullptr;
+	}
+
+	*size = static_cast<uint64_t>(dictionaries.size());
+
+	const char** result = new const char* [*size];
+	auto it = dictionaries.begin();
+
+	for (uint64_t i = 0; i < *size; i++)
+	{
+		result[i] = it->first.data();
+
+		++it;
+	}
+
+	return result;
+}
+
+LOCALIZATION_API void freeDictionariesLanguages(const char** data)
+{
+	delete[] data;
+}
+
+/**
+* @brief Application must call freeDictionary to free resources
+* @return Error description
+*/
+LOCALIZATION_API const char* getDictionary(const char* language, uint64_t* size, const char*** keys, const char*** values)
+{
+	if (!size)
+	{
+		return nullptrSizeError.data();
+	}
+	
+	if (!keys)
+	{
+		return nullptrKeysError.data();
+	}
+
+	if (!values)
+	{
+		return nullptrValuesError.data();
+	}
+
+	auto it = dictionaries.find(language);
+
+	if (it == dictionaries.end())
+	{
+		return noLanguageError.data();
+	}
+
+	const unordered_map<string, string>& dictionary = *(it->second);
+
+	*size = static_cast<uint64_t>(dictionary.size());
+
+	*keys = new const char* [*size];
+	*values = new const char* [*size];
+	auto valueIt = dictionary.begin();
+
+	for (uint64_t i = 0; i < *size; i++)
+	{
+		const auto& [key, value] = *valueIt;
+
+		keys[i] = key.data();
+		values[i] = value.data();
+
+		++valueIt;
+	}
+
+	return nullptr;
+}
+
+LOCALIZATION_API void freeDictionary(const char** keys, const char** values)
+{
+	delete[] keys;
+	delete[] values;
 }
 )");
 }
