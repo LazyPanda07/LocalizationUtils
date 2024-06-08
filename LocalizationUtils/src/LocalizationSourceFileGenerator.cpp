@@ -7,6 +7,7 @@ void LocalizationSourceFileGenerator::appendCore(ostream& cppFile, const string&
 	cppFile << utility::convertToUTF8(format(R"(#include <unordered_map>
 #include <string>
 #include <string_view>
+#include <cstdint>
 
 using namespace std;
 
@@ -175,8 +176,8 @@ LOCALIZATION_API const char* getDictionary(const char* language, uint64_t* size,
 	{
 		const auto& [key, value] = *valueIt;
 
-		keys[i] = key.data();
-		values[i] = value.data();
+		*keys[i] = key.data();
+		*values[i] = value.data();
 
 		++valueIt;
 	}
