@@ -9,11 +9,13 @@ private:
 	std::filesystem::path localizationFolder;
 
 private:
-	void appendCore(std::ofstream& cppFile, const std::string& originalLanguage) const;
+	static void appendCore(std::ostream& cppFile, const std::string& originalLanguage);
 
-	bool appendLanguage(std::ofstream& cppFile, const json::JSONParser& dictionary, const std::string& language) const;
+	static bool appendLanguage(std::ostream& cppFile, const json::JSONParser& dictionary, const std::string& language);
 
-	void appendDictionaryWithAllLanguages(std::ofstream& cppFile, const std::vector<std::string>& languages) const;
+	static void appendDictionaryWithAllLanguages(std::ostream& cppFile, const std::vector<std::string>& languages);
+
+	static void appendCCFunctions(std::ostream& cppFile);
 
 public:
 	LocalizationSourceFileGenerator(const json::JSONParser& settings);

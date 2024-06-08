@@ -2,10 +2,11 @@
 
 using namespace std;
 
-void LocalizationSourceFileGenerator::appendCore(ofstream& cppFile, const string& originalLanguage) const
+void LocalizationSourceFileGenerator::appendCore(ostream& cppFile, const string& originalLanguage)
 {
 	cppFile << utility::convertToUTF8(format(R"(#include <unordered_map>
 #include <string>
+#include <string_view>
 
 using namespace std;
 
@@ -15,11 +16,11 @@ using namespace std;
 #define LOCALIZATION_API extern "C" __declspec(dllexport)
 #endif
 
-LOCALIZATION_API const string originalLanguage = "{}";
-)"sv, originalLanguage));
+constexpr string_view originalLanguage = "{}";
+)", originalLanguage));
 }
 
-bool LocalizationSourceFileGenerator::appendLanguage(ofstream& cppFile, const json::JSONParser& dictionary, const string& language) const
+bool LocalizationSourceFileGenerator::appendLanguage(ostream& cppFile, const json::JSONParser& dictionary, const string& language)
 {
 	using namespace utility;
 
@@ -28,9 +29,9 @@ bool LocalizationSourceFileGenerator::appendLanguage(ofstream& cppFile, const js
 		return false;
 	}
 
-	string result = convertToUTF8(format(R"(LOCALIZATION_API const unordered_map<string, string> {}Dictionary = 
+	string result = convertToUTF8(format(R"(const unordered_map<string, string> {}Dictionary = 
 {}
-)"sv, language, '{'));
+)", language, '{'));
 
 	for (const auto& [key, value] : dictionary)
 	{
@@ -47,7 +48,7 @@ bool LocalizationSourceFileGenerator::appendLanguage(ofstream& cppFile, const js
 	return true;
 }
 
-void LocalizationSourceFileGenerator::appendDictionaryWithAllLanguages(ofstream& cppFile, const vector<string>& languages) const
+void LocalizationSourceFileGenerator::appendDictionaryWithAllLanguages(ostream& cppFile, const vector<string>& languages)
 {
 	using namespace utility;
 
@@ -56,7 +57,7 @@ void LocalizationSourceFileGenerator::appendDictionaryWithAllLanguages(ofstream&
 		return;
 	}
 
-	string result = convertToUTF8("LOCALIZATION_API const unordered_map<string, const unordered_map<string, string>*> dictionaries = \n{");
+	string result = convertToUTF8("const unordered_map<string, const unordered_map<string, string>*> dictionaries = \n{");
 
 	for (const auto& i : languages)
 	{
@@ -66,9 +67,39 @@ void LocalizationSourceFileGenerator::appendDictionaryWithAllLanguages(ofstream&
 	result.pop_back();
 	result.pop_back();
 
-	result += convertToUTF8("\n};\n");
+	result += convertToUTF8("\n};\n\n");
 
 	cppFile << result;
+}
+
+void LocalizationSourceFileGenerator::appendCCFunctions(ostream& cppFile)
+{
+	cppFile << utility::convertToUTF8(R"(LOCALIZATION_API const char* getLocalizedString(const char* key, const char* language)
+{
+	auto it = dictionaries.find(language);
+
+	if (it == language.end())
+	{
+		return nullptr;
+	}
+
+	const unordered_map<string, string>& dictionary = *(it->second);
+
+	auto valueIt = dictionary.find(key);
+
+	if (valueIt == dictionary.end())
+	{
+		return nullptr;
+	}
+
+	return it->second.data();
+}
+
+LOCALIZATION_API const char* getOriginalLanguage()
+{
+	return originalLanguage.data();
+}
+)");
 }
 
 LocalizationSourceFileGenerator::LocalizationSourceFileGenerator(const json::JSONParser& settings) :
@@ -93,7 +124,7 @@ void LocalizationSourceFileGenerator::generate() const
 
 	languages.insert(languages.begin(), settings.getString(settings::originalLanguageSetting));
 
-	this->appendCore(cppFile, settings.getString(settings::originalLanguageSetting));
+	LocalizationSourceFileGenerator::appendCore(cppFile, settings.getString(settings::originalLanguageSetting));
 
 	for (const auto& i : it)
 	{
@@ -111,11 +142,13 @@ void LocalizationSourceFileGenerator::generate() const
 			continue;
 		}
 
-		if (!this->appendLanguage(cppFile, json::JSONParser(ifstream(fileName)), language))
+		if (!LocalizationSourceFileGenerator::appendLanguage(cppFile, json::JSONParser(ifstream(fileName)), language))
 		{
 			erase(languages, language);
 		}
 	}
 
-	this->appendDictionaryWithAllLanguages(cppFile, languages);
+	LocalizationSourceFileGenerator::appendDictionaryWithAllLanguages(cppFile, languages);
+
+	LocalizationSourceFileGenerator::appendCCFunctions(cppFile);
 }
