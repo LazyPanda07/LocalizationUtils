@@ -181,8 +181,8 @@ LOCALIZATION_API const char* getDictionary(const char* language, uint64_t* size,
 	{
 		const auto& [key, value] = *valueIt;
 
-		*keys[i] = key.data();
-		*values[i] = value.data();
+		(*keys)[i] = key.data();
+		(*values)[i] = value.data();
 
 		++valueIt;
 	}
