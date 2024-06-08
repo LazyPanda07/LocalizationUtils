@@ -106,6 +106,11 @@ LOCALIZATION_API const char* getOriginalLanguage()
 	return originalLanguage.data();
 }
 
+LOCALIZATION_API bool findLanguage(const char* language)
+{
+	return dictionaries.contains(language);
+}
+
 /**
 * @brief Application must call freeDictionariesLanguages to free resources
 */
