@@ -3,19 +3,35 @@ import subprocess
 import json
 import unittest
 import os
+from typing import List
+
+arm = os.getenv("MARCH", "")
+
+
+def run_process(args: List[str], working_dir: str) -> int:
+    global arm
+
+    if arm == "armv8-a":
+        temp_args: List = ["qemu-aarch64"]
+
+        for arg in args:
+            temp_args.append(arg)
+
+        return subprocess.run(args=temp_args, cwd=working_dir).returncode
+    else:
+        return subprocess.run(args=args, cwd=working_dir).returncode
 
 
 class Test(unittest.TestCase):
     def test_functionality(self):
         executable_path = "../"
         working_dir = "../"
-        arm = os.getenv("MARCH", "")
 
         if platform.system() == "Windows":
             executable_path += "Windows/LocalizationUtils.exe"
             working_dir += "Windows"
         elif arm == "armv8-a":
-            executable_path = f"qemu-aarch64 {executable_path}LinuxARM/LocalizationUtils"
+            executable_path += "LinuxARM/LocalizationUtils"
             working_dir += "LinuxARM"
         else:
             executable_path += "Linux/LocalizationUtils"
@@ -29,7 +45,7 @@ class Test(unittest.TestCase):
         with open(f"{working_dir}/localization_utils_settings.json", "w") as file:
             file.write(json.dumps(settings))
 
-        self.assertFalse(subprocess.run([executable_path, ".", "generate"], cwd=working_dir).returncode)
+        self.assertFalse(run_process([executable_path, ".", "generate"], working_dir))
 
         en = {
             "first": "First",
@@ -39,7 +55,7 @@ class Test(unittest.TestCase):
         with open(f"{working_dir}/localization/localization_en.json", "w") as file:
             file.write(json.dumps(en))
 
-        self.assertFalse(subprocess.run([executable_path, ".", "generate"], cwd=working_dir).returncode)
+        self.assertFalse(run_process([executable_path, ".", "generate"], working_dir))
 
         with open(f"{working_dir}/localization/localization_ru.json", "r") as file:
             ru = json.load(file)
@@ -53,15 +69,9 @@ class Test(unittest.TestCase):
         with open(f"{working_dir}/localization/localization_ru.json", "w", encoding="utf-8") as file:
             file.write(json.dumps(ru, ensure_ascii=False))
 
-        self.assertFalse(subprocess.run([executable_path, ".", "generate"], cwd=working_dir).returncode)
-
-        self.assertFalse(
-            subprocess.run([executable_path, ".", "release_build", "release_bin"], cwd=working_dir).returncode
-        )
-
-        self.assertFalse(
-            subprocess.run([executable_path, ".", "debug_build", "debug_bin"], cwd=working_dir).returncode
-        )
+        self.assertFalse(run_process([executable_path, ".", "generate"], working_dir))
+        self.assertFalse(run_process([executable_path, ".", "release_build", "release_bin"], working_dir))
+        self.assertFalse(run_process([executable_path, ".", "debug_build", "debug_bin"], working_dir))
 
 
 if __name__ == '__main__':
