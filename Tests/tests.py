@@ -9,7 +9,7 @@ class Test(unittest.TestCase):
     def test_functionality(self):
         executable_path = "../"
         working_dir = "../"
-        arm = os.get_env("MARCH", "")
+        arm = os.getenv("MARCH", "")
 
         if platform.system() == "Windows":
             executable_path += "Windows/LocalizationUtils.exe"
