@@ -7,7 +7,7 @@ if (UNIX)
 	add_definitions(-D__LINUX__)
 endif (UNIX)
 
-project(LocalizationUtils)
+project(LocalizationUtils VERSION 1.2.0)
 
 add_executable(
 	${PROJECT_NAME}
@@ -23,6 +23,10 @@ add_executable(
 	LocalizationUtils/src/Commands/ICommand.cpp
 	LocalizationUtils/src/Commands/ReleaseBuildCommand.cpp
 )
+
+if (DEFINED ENV{MARCH} AND NOT "$ENV{MARCH}" STREQUAL "")
+	target_compile_options(${PROJECT_NAME} PRIVATE -march=$ENV{MARCH})
+endif()
 
 add_subdirectory(JSON)
 add_subdirectory(SHA256)

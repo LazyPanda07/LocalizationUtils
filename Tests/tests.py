@@ -2,16 +2,21 @@ import platform
 import subprocess
 import json
 import unittest
+import os
 
 
 class Test(unittest.TestCase):
     def test_functionality(self):
         executable_path = "../"
         working_dir = "../"
+        arm = os.get_env("MARCH", "")
 
         if platform.system() == "Windows":
             executable_path += "Windows/LocalizationUtils.exe"
             working_dir += "Windows"
+        elif arm == "armv8-a":
+            executable_path += "qemu-aarch64 LinuxARM/LocalizationUtils"
+            working_dir += "LinuxARM"
         else:
             executable_path += "Linux/LocalizationUtils"
             working_dir += "Linux"
