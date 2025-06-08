@@ -15,7 +15,7 @@ class Test(unittest.TestCase):
             executable_path += "Windows/LocalizationUtils.exe"
             working_dir += "Windows"
         elif arm == "armv8-a":
-            executable_path += "qemu-aarch64 LinuxARM/LocalizationUtils"
+            executable_path = f"qemu-aarch64 {executable_path}LinuxARM/LocalizationUtils"
             working_dir += "LinuxARM"
         else:
             executable_path += "Linux/LocalizationUtils"
