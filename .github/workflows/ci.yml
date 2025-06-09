@@ -177,7 +177,7 @@ jobs:
 
     - name: Create Linux ARM zip
       if: ${{ env.CURRENT_BRANCH == 'master' }}
-      run: zip linux.zip LinuxARM/localization_utils_settings.json LinuxARM/LocalizationUtils
+      run: zip linux_aarch64.zip LinuxARM/localization_utils_settings.json LinuxARM/LocalizationUtils
 
     - name: Publish
       if: ${{ env.CURRENT_BRANCH == 'master' }}
