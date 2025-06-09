@@ -48,6 +48,8 @@ namespace utility
 
 	string convertToUTF8(const string& text)
 	{
+		return text;
+
 		return json::utility::toUTF8JSON(text, CP_WINDOWS_1251);
 	}
 
