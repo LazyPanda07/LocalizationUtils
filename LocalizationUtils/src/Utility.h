@@ -15,8 +15,6 @@ namespace utility
 
 	json::JSONBuilder copyOriginalLanguage(const json::JSONParser& originalLanguageKeys, const std::unordered_set<std::string>& existingKeys = std::unordered_set<std::string>());
 
-	std::string convertToUTF8(const std::string& text);
-
 	std::filesystem::path generateSettingsFile();
 
 	void appendSlash(std::string& source);

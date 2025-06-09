@@ -4,7 +4,7 @@ using namespace std;
 
 void LocalizationSourceFileGenerator::appendCore(ostream& cppFile, const string& originalLanguage)
 {
-	cppFile << utility::convertToUTF8(format(R"(#include <unordered_map>
+	cppFile << format(R"(#include <unordered_map>
 #include <string>
 #include <string_view>
 #include <cstdint>
@@ -23,7 +23,7 @@ constexpr string_view nullptrSizeError = "size must be valid address";
 constexpr string_view nullptrKeysError = "keys must be valid address";
 constexpr string_view nullptrValuesError = "values must be valid address";
 constexpr string_view noLanguageError = "Wrong language";
-)", originalLanguage));
+)", originalLanguage);
 }
 
 bool LocalizationSourceFileGenerator::appendLanguage(ostream& cppFile, const json::JSONParser& dictionary, const string& language)
@@ -35,19 +35,19 @@ bool LocalizationSourceFileGenerator::appendLanguage(ostream& cppFile, const jso
 		return false;
 	}
 
-	string result = convertToUTF8(format(R"(const unordered_map<string, string> {}Dictionary = 
+	string result = format(R"(const unordered_map<string, string> {}Dictionary = 
 {}
-)", language, '{'));
+)", language, '{');
 
 	for (const auto& [key, value] : dictionary)
 	{
-		result += convertToUTF8("\t{ \"") + key + convertToUTF8("\", \"") + get<string>(value) + convertToUTF8("\" },\n");
+		result += "\t{ \"" + key + "\", \"" + get<string>(value) + "\" },\n";
 	}
 
 	result.pop_back();
 	result.pop_back();
 
-	result += convertToUTF8("\n};\n");
+	result += "\n};\n";
 
 	cppFile << result << endl;
 
@@ -63,24 +63,24 @@ void LocalizationSourceFileGenerator::appendDictionaryWithAllLanguages(ostream& 
 		return;
 	}
 
-	string result = convertToUTF8("const unordered_map<string, const unordered_map<string, string>*> dictionaries = \n{");
+	string result = "const unordered_map<string, const unordered_map<string, string>*> dictionaries = \n{";
 
 	for (const auto& i : languages)
 	{
-		result += convertToUTF8("\t{ \"") + i + convertToUTF8("\", &") + i + convertToUTF8("Dictionary") + convertToUTF8(" },\n");
+		result += "\t{ \"" + i + "\", &" + i + "Dictionary" + " },\n";
 	}
 
 	result.pop_back();
 	result.pop_back();
 
-	result += convertToUTF8("\n};\n\n");
+	result += "\n};\n\n";
 
 	cppFile << result;
 }
 
 void LocalizationSourceFileGenerator::appendCCFunctions(ostream& cppFile)
 {
-	cppFile << utility::convertToUTF8(R"(LOCALIZATION_API const char* getLocalizedString(const char* key, const char* language)
+	cppFile << R"(LOCALIZATION_API const char* getLocalizedString(const char* key, const char* language)
 {
 	auto it = dictionaries.find(language);
 
@@ -195,7 +195,7 @@ LOCALIZATION_API void freeDictionary(const char** keys, const char** values)
 	delete[] keys;
 	delete[] values;
 }
-)");
+)";
 }
 
 LocalizationSourceFileGenerator::LocalizationSourceFileGenerator(const json::JSONParser& settings) :

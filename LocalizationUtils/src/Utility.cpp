@@ -46,13 +46,6 @@ namespace utility
 		return result;
 	}
 
-	string convertToUTF8(const string& text)
-	{
-		return text;
-
-		return json::utility::toUTF8JSON(text, CP_WINDOWS_1251);
-	}
-
 	filesystem::path generateSettingsFile()
 	{
 		filesystem::path pathToSettingsFile = utility::makePath(global::startFolder, global::settingsFile);
