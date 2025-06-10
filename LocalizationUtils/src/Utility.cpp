@@ -13,7 +13,7 @@ namespace utility
 {
 	string getLocalizationUtilsVersion()
 	{
-		string version = "1.2.1";
+		string version = "1.2.2";
 
 		return version;
 	}
@@ -55,7 +55,7 @@ namespace utility
 			return pathToSettingsFile;
 		}
 
-		json::JSONBuilder settingsFile(CP_WINDOWS_1251);
+		json::JSONBuilder settingsFile(CP_UTF8);
 		vector<json::utility::jsonObject> otherLanguages;
 
 		settingsFile[settings::originalLanguageSetting] = "en"s;
