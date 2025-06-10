@@ -13,7 +13,7 @@ namespace utility
 {
 	string getLocalizationUtilsVersion()
 	{
-		string version = "1.2.0";
+		string version = "1.2.1";
 
 		return version;
 	}
